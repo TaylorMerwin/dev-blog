@@ -1,18 +1,18 @@
 body {
   background-color: #202124;
-  color:white;
+  color: white;
 }
 
 header {
   font-family: "field-gothic-compact", sans-serif;
   font-weight: 700;
   font-style: normal;
-font-size: 4rem;
-text-align: center;
+  font-size: 4rem;
+  text-align: center;
 }
 
 .menu {
- /* background-color: red;
+  /* background-color: red;
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -20,12 +20,11 @@ text-align: center;
   padding: 10px; */
 }
 
-.menu ul{
+.menu ul {
   list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .menu ul li {
@@ -33,9 +32,14 @@ text-align: center;
   text-decoration: none;
   padding: 10px;
   gap: 10%;
-
 }
 
+.menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  gap: 10%;
+}
 
 .article-list {
   display: flex;
@@ -47,12 +51,41 @@ text-align: center;
 
 .card {
   min-width: 40%;
-  height: 300px;
-  border-radius: 10px;
+  max-width: 40%;
+  /*height: 200px; */
+  border-radius: 1rem;
   /*box-shadow: 0 0 10px rgba(0, 0, 0, 1); */
-  overflow: hidden;
-  position: relative;
+ /* overflow: hidden; 
+  position: relative; */
   text-align: center;
   border: solid;
   border-color: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.article-about {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+}
+
+.article-description {
+  width: 80%;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #41444a;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
 }

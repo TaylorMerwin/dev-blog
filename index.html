@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
-  <link rel="stylesheet" href="styles.css" />
-  <title>Bloggy</title>
-</head>
-<body>
-  <header>Bloggy</header>
-  <nav class="menu">
-    <ul>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Bloggy</title>
+  </head>
+  <body>
+    <header>Bloggy</header>
+    <nav class="menu">
+      <ul>
+        <li>Home</li>
         <li>New Post</li>
         <li>Random</li>
-        <li>Source</li>
-    </ul>
-  </nav>
+        <li>
+          <a
+            href="https://github.com/TaylorMerwin/bloggy"
+            rel="noopener noreferrer nofollow"
+            target="_blank"
+            >Source</a
+          >
+        </li>
+      </ul>
+    </nav>
 
-  <main>
-    <div class="article-list">
-    <section class="card">
-      <h1>Blog Post Title</h1>
-      <p>Blog post content</p>
-    </section>
-    <section class="card">
-      <h2>Blog Post Title 2</h2>
-      <p>Blog post content 2</p>
-    </section>
-  </div>
-  </main>
+    <main>
+      <div class="article-list">
+        <section class="card">
+          <h1>Blog Post Title</h1>
+          <div class="article-about">
+            <p>Author</p>
+            <p>Date</p>
+          </div>
+          <p class="article-description">
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat."
+          </p>
+        </section>
+        <section class="card">
+          <h2>Blog Post Title 2</h2>
+          <div class="article-about">
+            <p>Author</p>
+            <p>Date</p>
+          </div>
+          <p class="article-description">Blog post content 2</p>
+        </section>
+      </div>
+    </main>
 
-  <footer>
-    <p>Bloggy &copy; Taylor Merwin 2023</p>
-  </footer>
-  
-</body>
+    <footer>
+      <p>Bloggy &copy; Taylor Merwin 2023</p>
+    </footer>
+  </body>
 </html>
