@@ -1,16 +1,58 @@
-main {
+body {
+  background-color: #202124;
+  color:white;
+}
+
+header {
+  font-family: "field-gothic-compact", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+font-size: 4rem;
+text-align: center;
+}
+
+.menu {
+ /* background-color: red;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px; */
+}
+
+.menu ul{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.menu ul li {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  gap: 10%;
+
+}
+
+
+.article-list {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
 }
 
 .card {
-  width: 300px;
+  min-width: 40%;
   height: 300px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  /*box-shadow: 0 0 10px rgba(0, 0, 0, 1); */
   overflow: hidden;
   position: relative;
   text-align: center;
+  border: solid;
+  border-color: white;
 }
