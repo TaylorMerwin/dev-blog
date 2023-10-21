@@ -1,0 +1,1 @@
+const easyMDE = new EasyMDE({element: document.getElementById('content')});
