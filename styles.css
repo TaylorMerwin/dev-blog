@@ -71,7 +71,6 @@ header {
   justify-content: space-between;
   align-items: center;
   width: 50%;
-
 }
 
 .card-title {
@@ -85,7 +84,6 @@ header {
 .card-description {
   width: 80%;
 }
-
 
 footer {
   position: fixed;
