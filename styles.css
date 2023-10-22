@@ -2,7 +2,6 @@ body {
   background-color: #fff;
   color: black;
   font-family: "arial", sans-serif;
-  font-weight: 300;
 }
 
 header {
@@ -56,7 +55,6 @@ header {
   align-items: center;
 }
 
-
 .card-image {
   width: 100%;
   height: auto;
@@ -66,7 +64,6 @@ header {
 }
 
 .card-about {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,8 +82,34 @@ header {
   width: 80%;
 }
 
+.article-container {
+
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border: solid;
+
+}
+
+.article-about {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  line-height: 0%;
+}
+
+.article-content {
+  text-align: left;
+  max-width: 80%;
+  min-width: 60%;
+}
+
 footer {
-  position: fixed;
+
   left: 0;
   bottom: 0;
   width: 100%;
