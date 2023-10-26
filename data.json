@@ -1,16 +1,22 @@
 {
-  "messages": [
-    "Hello from the JSON file!",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne",
-    "TestDataOne"
+  "posts": [
+    {
+      "title": "fgfdgfd",
+      "author": " gdfgfdgfd",
+      "date": "2023-10-26",
+      "content": " gfd gfdg fd gdfg fdg"
+    },
+    {
+      "title": "My Title",
+      "author": "My Name",
+      "date": "2023-10-26",
+      "content": "Blah blah blahBlah blah blahBlah blah blahBlah blah blahBlah blah blahBlah blah blah"
+    },
+    {
+      "title": "fdsfdsf",
+      "author": "fdsfds",
+      "date": "2023-10-26",
+      "content": "fdsfsdfdsfs"
+    }
   ]
 }
