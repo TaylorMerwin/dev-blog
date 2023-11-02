@@ -1,114 +1,44 @@
 {
   "posts": [
     {
-      "title": "fgfdgfd",
-      "author": " gdfgfdgfd",
-      "date": "2023-10-26",
-      "content": " gfd gfdg fd gdfg fdg"
-    },
-    {
-      "title": "My Title",
-      "author": "My Name",
-      "date": "2023-10-26",
-      "content": "Blah blah blahBlah blah blahBlah blah blahBlah blah blahBlah blah blahBlah blah blah"
-    },
-    {
-      "title": "fdsfdsf",
-      "author": "fdsfds",
-      "date": "2023-10-26",
-      "content": "fdsfsdfdsfs"
-    },
-    {
-      "title": "dfdsfsd",
-      "author": "dsffsdfds",
-      "date": "2023-10-26",
-      "content": "fdsfdsfds"
-    },
-    {
-      "title": "dfdsfsd",
-      "author": "dsffsdfds",
-      "date": "2023-10-26",
-      "content": "fdsfdsfds"
-    },
-    {},
-    {},
-    {
-      "title": "dfsdf",
-      "author": "fdsfds",
+      "id": 1,
+      "title": "My Test Post",
+      "author": "Nick",
+      "date": "2023-11-02",
+      "content": "This is a cool blog.",
       "images": [
-        "uploads\\2023-10-26T03-38-02.378Ztemp2.png"
+        "uploads\\2023-11-02T03-09-24.304Znwg5.png"
       ]
     },
     {
-      "title": "fdsfsdffsd",
-      "author": "fdsfsdf",
-      "date": "2023-10-26",
-      "content": "fdsfdsfsd",
-      "images": [
-        "uploads\\2023-10-26T03-42-28.608Ztemp2.png"
-      ]
-    },
-    {
-      "title": "ttt",
-      "author": "ttt",
-      "date": "2023-11-02",
-      "content": "ttt",
-      "images": []
-    },
-    {
-      "title": "ttt",
-      "author": "tttt",
-      "date": "2023-11-02",
-      "content": "ttttt",
-      "images": []
-    },
-    {
-      "title": "fgdsgfsd",
-      "author": "fsdfds",
-      "date": "2023-11-02",
-      "content": "fdsfds",
-      "images": []
-    },
-    {
-      "title": "Our Test",
-      "author": "Its us",
-      "date": "2023-11-02",
-      "content": "Yep.",
-      "images": [
-        "uploads\\2023-11-02T02-30-33.391Znwg5.png"
-      ]
-    },
-    {
-      "title": "Test",
+      "id": 2,
+      "title": "Second Post",
       "author": "Me",
       "date": "2023-11-02",
-      "content": "This is a face",
+      "content": "Test",
       "images": [
-        "uploads\\2023-11-02T02-35-34.522Znwg5.png"
+        "uploads\\2023-11-02T03-09-54.194Znwg6.png"
       ]
     },
     {
-      "title": "My title",
-      "author": "Face man",
+      "id": 3,
+      "title": "Test post creation",
+      "author": "Me",
       "date": "2023-11-02",
-      "content": "This is a face",
+      "content": "Testing stuff",
       "images": [
-        "uploads\\2023-11-02T02-37-22.522Znwg5.png"
+        "uploads\\2023-11-02T03-24-37.181Znwg7.png"
       ]
     },
     {
-      "title": "the test",
-      "author": "blah",
+      "id": 4,
+      "title": "fsdfsdfds",
+      "author": "fsdfdsfsd",
       "date": "2023-11-02",
-      "content": "fdfs",
-      "images": []
-    },
-    {
-      "title": "fsdfsd",
-      "author": "fsdfsd",
-      "date": "2023-11-02",
-      "content": "fdsfsdf",
-      "images": []
+      "content": "dfsdfds",
+      "images": [
+        "uploads\\2023-11-02T03-28-17.486Znwg5.png"
+      ]
     }
   ]
 }

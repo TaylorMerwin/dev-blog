@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const contentTextarea = document.getElementById("content");
     const easyMDE = new EasyMDE({ element: contentTextarea });
 
+    // TODO: Create a serialized ID for each blog post that is created, and store the ID in the data.json.
     form.addEventListener("submit", (event) => {
         event.preventDefault();
 
