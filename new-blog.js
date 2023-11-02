@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.text())
         .then(data => {
             console.log(data);
+            window.location.href = 'index.html'
         })
         .catch(error => {
             console.error("Error updating data:", error);
