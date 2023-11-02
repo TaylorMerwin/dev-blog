@@ -38,16 +38,17 @@
       <input type="text" id="title" name="title" /><br /><br />
       <label for="author">Author:</label>
       <input type="text" id="author" name="author" /><br /><br />
+      <label>Upload images
+        <input name="images" type="file" accept="image/png, image/jpeg" multiple />
+      </label><br /><br />
       <label for="content">Content:</label><br />
       <textarea id="content"></textarea>
-      <script>
-        const easyMDE = new EasyMDE();
-      </script>
+
       <br /><br />
-      <input type="submit" value="Submit" />
+      <input id="submitButton" type="submit" value="Submit" />
     </form>
   </div>
 
-    <script src="scripts.js"></script>
+    <script src="new-blog.js"></script>
   </body>
 </html>
