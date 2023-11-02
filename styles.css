@@ -1,36 +1,58 @@
+* { box-sizing: border-box;
+}
+
 body {
-  background-color: #fff;
   color: black;
   font-family: "arial", sans-serif;
+  padding:0;
+  margin:0;
 }
 
 header {
+  position: relative;
+  background-color: darkcyan;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.logo-text {
   font-family: "field-gothic-compact", sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: 4rem;
+  font-size: 4em;
   text-align: center;
+
 }
+
 
 .menu ul {
   list-style: none;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: space-around;
+
 }
 
-.menu ul li {
-  color: black;
+.menu ul li, .menu ul li a {
+  color: white;
   text-decoration: none;
-  padding: 10px;
+  padding: 10%;
   gap: 10%;
 }
 
-.menu ul li a {
-  color: black;
-  text-decoration: none;
-  padding: 10px;
-  gap: 10%;
+
+.curve::before {
+content: '';
+display: block;
+position: absolute;
+border-radius: 100% 50%;
+}
+
+.curve::after {
+
 }
 
 .article-list {
@@ -71,12 +93,19 @@ header {
 }
 
 .card-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+
+
   margin-top: 0;
   margin-bottom: 0;
   line-height: 0%;
+  text-decoration: none;
 }
+
+.card-title a {
+  text-decoration: none;
+  color: black;
+}
+
 
 .card-description {
   width: 80%;
@@ -106,6 +135,14 @@ header {
   text-align: left;
   max-width: 80%;
   min-width: 60%;
+}
+
+.new-post-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: solid;
+  width: 80%;
 }
 
 footer {
