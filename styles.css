@@ -8,15 +8,6 @@ body {
   margin:0;
 }
 
-header {
-  position: relative;
-  background-color: darkcyan;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
 
 .logo-text {
   font-family: "field-gothic-compact", sans-serif;
@@ -25,6 +16,17 @@ header {
   font-size: 4em;
   text-align: center;
 
+}
+
+
+header {
+  position: relative;
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 
@@ -41,18 +43,6 @@ header {
   text-decoration: none;
   padding: 10%;
   gap: 10%;
-}
-
-
-.curve::before {
-content: '';
-display: block;
-position: absolute;
-border-radius: 100% 50%;
-}
-
-.curve::after {
-
 }
 
 .article-list {
