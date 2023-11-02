@@ -6,6 +6,12 @@ const multer = require('multer');
 const app = express();
 const PORT = 3000;
 
+app.get('/getLatestPost', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
+    const latestPost = data.posts[data.posts.length - 1]; // Assuming the latest post is at the end
+    res.json(latestPost);
+});
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/');
