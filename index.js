@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         pElementDate.textContent = data.posts[0].date;
         pElementAuthor.textContent = data.posts[0].author;  
         pElementTitle.textContent = data.posts[0].title;
-        pElementDescription.textContent = data.posts[0].content;
+        pElementDescription.textContent = data.posts[0].description;
     })
     .catch(error => {
         console.error("Error fetching data from JSON:", error);
