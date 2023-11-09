@@ -1,15 +1,18 @@
-
 body {
   color: black;
   font-family: "arial", sans-serif;
-  padding:0;
-  margin:0;
-  background: rgb(120,139,253);
-  background: linear-gradient(90deg, rgba(120,139,253,1) 0%, rgba(176,131,255,1) 49%, rgba(108,233,255,1) 100%); 
+  padding: 0;
+  margin: 0;
+  background: rgb(120, 139, 253);
+  background: linear-gradient(
+    90deg,
+    rgba(120, 139, 253, 1) 0%,
+    rgba(176, 131, 255, 1) 49%,
+    rgba(108, 233, 255, 1) 100%
+  );
 }
 
-
-.logo-text, 
+.logo-text,
 .logo-text a {
   font-family: "field-gothic-compact", sans-serif;
   font-weight: 700;
@@ -19,9 +22,7 @@ body {
   padding-left: 5%;
   text-decoration: none;
   color: black;
-
 }
-
 
 header {
   position: relative;
@@ -34,14 +35,12 @@ header {
   height: min-content;
 }
 
-
 .menu ul {
   list-style: none;
   display: flex;
   justify-content: flex-start;
   gap: 3rem;
   padding-right: 40px;
-
 }
 
 .menu ul li,
@@ -51,7 +50,6 @@ header {
   font-weight: 500;
   color: black;
   text-decoration: none;
-
 }
 
 .article-list {
@@ -60,10 +58,6 @@ header {
   align-items: center;
   justify-content: center;
   gap: 2rem;
-}
-
-.card-image {
-
 }
 
 .card {
@@ -87,8 +81,7 @@ header {
 }
 
 .card img {
-  
-  align-self: stretch; 
+  align-self: stretch;
   height: fixed;
   width: auto;
   border-radius: 1rem px;
@@ -97,15 +90,13 @@ header {
 }
 
 img {
-  
-  align-self: stretch; 
+  align-self: stretch;
   height: fixed;
   width: auto;
   border-radius: 1rem px;
   gap: 1rem;
   justify-content: center;
 }
-
 
 .card-about {
   display: flex;
@@ -115,8 +106,6 @@ img {
 }
 
 .card-title {
-
-
   margin-top: 0;
   margin-bottom: 0;
   line-height: 0%;
@@ -128,17 +117,13 @@ img {
   color: black;
 }
 
-
 .card-description {
   width: 80%;
 }
 
-
-
 /* view-blog styling below */
 
 .article-container {
-
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -147,7 +132,6 @@ img {
   gap: 2rem;
   border: solid;
   background-color: white;
-
 }
 
 .article-about {
@@ -158,14 +142,12 @@ img {
   line-height: 0%;
 }
 
-.article-image img{
+.article-image img {
   width: 50%;
   height: auto;
   border-radius: 1rem;
   margin: 1rem;
 }
-
-
 
 .article-content {
   text-align: left;
@@ -195,7 +177,6 @@ img {
 }
 
 footer {
-
   left: 0;
   bottom: 0;
   width: 100%;
