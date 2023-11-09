@@ -16,12 +16,11 @@
   </head>
   <body>
     <header class="heading">
-      <h1 class="logo-text">Bloggy</h1>
+      <h1 class="logo-text"><a href="index.html">Bloggy</a></h1>
       <nav class="menu">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="new-blog.html">New Post</a></li>
-          <li><a href="google.com">Random</a></li>
+          <li><a href="new-blog.html">New</a></li>
           <li>
             <a
               href="https://github.com/TaylorMerwin/bloggy"
@@ -34,25 +33,30 @@
       </nav>
     </header>
 
-    <h1>Create a New Blog Post</h1>
-    <form enctype="multipart/form-data">
+    <section class="form-section">
+      <h1>Create a New Blog Post</h1>
+      <form enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" /><br /><br />
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" /><br /><br />
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" /><br /><br />
+        <label
+          >Upload image
+          <input
+            name="images"
+            type="file"
+            accept="image/png, image/jpeg"
+          /> </label
+        ><br /><br />
+        <label for="content">Content:</label><br />
+        <textarea id="content"></textarea>
 
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" /><br /><br />
-      <label for="author">Author:</label>
-      <input type="text" id="author" name="author" /><br /><br />
-      <label for="description">Description:</label>
-      <input type="text" id="description" name="description" /><br /><br />
-      <label>Upload image
-      <input name="images" type="file" accept="image/png, image/jpeg" />
-      </label><br /><br />
-      <label for="content">Content:</label><br />
-      <textarea id="content"></textarea>
-
-      <br /><br />
-      <input id="submitButton" type="submit" value="Submit" />
-    </form>
-  </div>
+        <br /><br />
+        <input id="submitButton" type="submit" value="Submit" />
+      </form>
+    </section>
 
     <script src="new-blog.js"></script>
   </body>

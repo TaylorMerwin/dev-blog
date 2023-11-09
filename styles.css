@@ -9,41 +9,49 @@ body {
 }
 
 
-.logo-text {
+.logo-text, 
+.logo-text a {
   font-family: "field-gothic-compact", sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: 4em;
+  font-size: 48px;
   text-align: center;
   padding-left: 5%;
+  text-decoration: none;
+  color: black;
 
 }
 
 
 header {
   position: relative;
-  background-color: white;
+
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 20%;
   align-items: center;
   color: black;
+  height: min-content;
 }
 
 
 .menu ul {
   list-style: none;
   display: flex;
-  justify-content: center;
-  align-items: space-around;
+  justify-content: flex-start;
+  gap: 3rem;
+  padding-right: 40px;
 
 }
 
-.menu ul li, .menu ul li a {
+.menu ul li,
+.menu ul li a {
+  font-family: "field-gothic-compact", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
   color: black;
   text-decoration: none;
-  padding: 10%;
-  gap: 10%;
+
 }
 
 .article-list {
@@ -130,6 +138,7 @@ header {
   justify-content: center;
   gap: 2rem;
   border: solid;
+  background-color: white;
 
 }
 
@@ -153,6 +162,15 @@ header {
   gap: 2rem;
   border: solid;
   width: 80%;
+}
+
+.form-section {
+  background-color: white;
+  border: solid;
+}
+
+.form-section h1 {
+  text-align: center;
 }
 
 footer {
