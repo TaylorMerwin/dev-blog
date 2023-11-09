@@ -2,42 +2,62 @@
   "posts": [
     {
       "id": 1,
-      "title": "My Test Post",
-      "author": "Nick",
-      "date": "2023-11-02",
-      "content": "This is a cool blog.",
+      "title": "This is 1",
+      "author": "My author",
+      "date": "2023-11-09",
+      "content": "My text",
       "images": [
-        "uploads\\2023-11-02T03-09-24.304Znwg5.png"
+        "uploads\\2023-11-09T04-03-00.610Zprof.jpg"
       ]
     },
     {
       "id": 2,
-      "title": "Second Post",
-      "author": "Me",
-      "date": "2023-11-02",
-      "content": "Test",
+      "title": "This is 2",
+      "author": "fdsfsd",
+      "date": "2023-11-09",
+      "content": "fdsfds",
       "images": [
-        "uploads\\2023-11-02T03-09-54.194Znwg6.png"
+        "uploads\\2023-11-09T04-06-15.030Znwg4.png"
       ]
     },
     {
       "id": 3,
-      "title": "Test post creation",
-      "author": "Me",
-      "date": "2023-11-02",
-      "content": "Testing stuff",
+      "title": "This is 3",
+      "author": "fdgadfgfdsg",
+      "date": "2023-11-09",
+      "content": "gfdgdsfgdsf",
       "images": [
-        "uploads\\2023-11-02T03-24-37.181Znwg7.png"
+        "uploads\\2023-11-09T04-11-56.511Znwg4.png"
       ]
     },
     {
       "id": 4,
-      "title": "fsdfsdfds",
-      "author": "fsdfdsfsd",
-      "date": "2023-11-02",
-      "content": "dfsdfds",
+      "title": "This is 4",
+      "author": "gfdgdf",
+      "date": "2023-11-09",
+      "content": "gfdgfd",
       "images": [
-        "uploads\\2023-11-02T03-28-17.486Znwg5.png"
+        "uploads\\2023-11-09T04-30-06.692Znwg3.png"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "This is 5",
+      "author": "Me",
+      "date": "2023-11-09",
+      "content": "Yep",
+      "images": [
+        "uploads\\2023-11-09T04-42-08.289Znwg2.png"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "This is 6",
+      "author": "fdsrfsd",
+      "date": "2023-11-09",
+      "content": "fsdfsdfsd",
+      "images": [
+        "uploads\\2023-11-09T04-43-20.490Znwg6.png"
       ]
     }
   ]

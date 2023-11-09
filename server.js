@@ -6,12 +6,6 @@ const multer = require('multer');
 const app = express();
 const PORT = 3000;
 
-app.get('/getLatestPost', (req, res) => {
-    const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
-    const latestPost = data.posts[data.posts.length - 1]; // Assuming the latest post is at the end
-    res.json(latestPost);
-});
-
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/');
@@ -46,14 +40,6 @@ app.post('/updateData', (req, res, next) => {
 }, (req, res) => {
     console.log('Request headers:', req.headers);
     console.log('Request body:', req.body);
-    
-    const newPost = {
-        title: req.body.title,
-        author: req.body.author,
-        date: req.body.date,
-        content: req.body.content,
-        images: req.files.map(file => file.path)
-    };
 
     fs.readFile('data.json', 'utf8', (err, data) => {
         if (err) {
@@ -62,8 +48,23 @@ app.post('/updateData', (req, res, next) => {
         }
         
         let jsonData = JSON.parse(data);
-        jsonData.posts.push(newPost);
         
+        // Determine the next ID
+        // If there are no posts, start with ID 1; otherwise, increment the highest ID by 1
+        const nextId = jsonData.posts.length > 0 ? Math.max(...jsonData.posts.map(post => post.id)) + 1 : 1;
+
+        const newPost = {
+            id: nextId, // Use the calculated next ID here
+            title: req.body.title,
+            author: req.body.author,
+            date: req.body.date,
+            content: req.body.content,
+            images: req.files.map(file => file.path)
+        };
+
+        // Add the new post to the array
+        jsonData.posts.push(newPost);
+
         fs.writeFile('data.json', JSON.stringify(jsonData, null, 2), (writeErr) => {
             if (writeErr) {
                 console.error(writeErr);
