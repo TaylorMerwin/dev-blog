@@ -45,5 +45,3 @@ window.addEventListener('DOMContentLoaded', (event) => {
             console.error("Error fetching data from JSON:", error);
         });
 });
-
-

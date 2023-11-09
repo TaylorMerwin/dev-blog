@@ -94,8 +94,16 @@ header {
   border-radius: 1rem px;
   gap: 1rem;
   justify-content: center;
+}
+
+img {
   
-  opacity: 0.8;
+  align-self: stretch; 
+  height: fixed;
+  width: auto;
+  border-radius: 1rem px;
+  gap: 1rem;
+  justify-content: center;
 }
 
 
@@ -150,6 +158,15 @@ header {
   line-height: 0%;
 }
 
+.article-image img{
+  width: 50%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 1rem;
+}
+
+
+
 .article-content {
   text-align: left;
   max-width: 80%;
@@ -171,6 +188,10 @@ header {
 
 .form-section h1 {
   text-align: center;
+}
+
+#description {
+  width: 50%;
 }
 
 footer {
