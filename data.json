@@ -1,5 +1,67 @@
 {
   "posts": [
-    {}
+    {
+      "id": 1,
+      "title": "My Test Post",
+      "author": "Nick",
+      "date": "2023-11-02",
+      "description": "qeqeqeeeq",
+      "content": "This is a cool blog.",
+      "images": [
+        "uploads\\2023-11-02T03-09-24.304Znwg5.png"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Second Post",
+      "author": "Me",
+      "date": "2023-11-02",
+      "content": "Test",
+      "images": [
+        "uploads\\2023-11-02T03-09-54.194Znwg6.png"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Test post creation",
+      "author": "Me",
+      "date": "2023-11-02",
+      "content": "Testing stuff",
+      "images": [
+        "uploads\\2023-11-02T03-24-37.181Znwg7.png"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "fsdfsdfds",
+      "author": "fsdfdsfsd",
+      "date": "2023-11-02",
+      "content": "dfsdfds",
+      "images": [
+        "uploads\\2023-11-02T03-28-17.486Znwg5.png"
+      ]
+    },
+    {
+      "title": "Title",
+      "author": "author",
+      "date": "2023-11-03",
+      "content": "ddsfdsfdsffdfffsdfsgfgdhghhhhhhhhhhhhhhhhhtrt t fdgfdgdsfgfdsgfds",
+      "images": []
+    },
+    {
+      "title": "Titleee",
+      "author": "Authooor",
+      "date": "2023-11-03",
+      "content": "Loren Ipsum",
+      "images": []
+    },
+    {
+      "title": "fdfdsfdfsd",
+      "author": "yuyuyuyu",
+      "date": "2023-11-03",
+      "description": "qeqeqeeeq",
+      "content": "sfdsfadsfaefeawf",
+      "images": []
+    }
   ]
 }
