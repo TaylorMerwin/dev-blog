@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
     const titleInput = document.getElementById("title");
     const authorInput = document.getElementById("author");
+    const descriptionInput = document.getElementById("description");
     const contentTextarea = document.getElementById("content");
     const easyMDE = new EasyMDE({ element: contentTextarea });
 
