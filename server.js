@@ -68,7 +68,22 @@ app.post(
       }
 
       let jsonData = JSON.parse(data);
-      jsonData.posts.push(newPost);
+
+        // Determine the next ID
+        // If there are no posts, start with ID 1; otherwise, increment the highest ID by 1
+        const nextId = jsonData.posts.length > 0 ? Math.max(...jsonData.posts.map(post => post.id)) + 1 : 1;
+
+        const newPost = {
+            id: nextId, // Use the calculated next ID here
+            title: req.body.title,
+            author: req.body.author,
+            date: req.body.date,
+            description: req.body.description,
+            content: req.body.content,
+            images: req.files.map(file => file.path)
+        };
+
+        jsonData.posts.push(newPost);
 
       fs.writeFile(
         "data.json",
