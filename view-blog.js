@@ -1,4 +1,3 @@
-
 // Get the article ID from the URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
@@ -7,14 +6,21 @@ const articleId = urlParams.get('id');
 fetch('/data.json')
   .then(response => response.json())
   .then(data => {
-    const article = data.articles.find(article => article.id === articleId);
+    const article = data.posts.find(post => post.id == articleId);
 
     // Replace the page's details with the article data
-    const titleElement = document.querySelector('h1');
-    const contentElement = document.querySelector('p');
-    titleElement.textContent = article.title;
-    contentElement.textContent = article.content;
+    const titleElement = document.querySelector('.article-title');
+    const dateElement = document.querySelector('.article-date');
+    const authorElement = document.querySelector('.article-author');
+    const imageElement = document.querySelector('.article-img');
+    const contentElement = document.querySelector('.article-body');
 
-    // Update the page's title with the article title
-    document.title = article.title;
+    titleElement.textContent = article.title;
+    dateElement.textContent = article.date;
+    authorElement.textContent = article.author;
+    imageElement.src = article.images[0];
+    contentElement.innerHTML = article.content; // Use innerHTML to render HTML content
+  })
+  .catch(error => {
+    console.error("Error fetching data from JSON:", error);
   });
