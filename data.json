@@ -90,13 +90,13 @@
     },
     {
       "id": 9,
-      "title": "Test",
-      "author": "Me",
+      "title": "Why cats rule the world",
+      "author": "Taylor",
       "date": "2023-11-16",
-      "description": "My desc",
+      "description": "You will be shocked!",
       "content": "My content",
       "images": [
-        "uploads\\2023-11-16T04-13-56.776Zpt1.png"
+        "uploads\\DSC00056.jpg"
       ]
     }
   ]
