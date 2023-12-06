@@ -24,7 +24,10 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage }).fields([
+  { name: 'images', maxCount: 5 },
+  { name: 'croppedImage', maxCount: 1 }
+]);
 
 // Middleware to parse POST requests
 app.use(express.json());
@@ -36,7 +39,7 @@ app.use(express.static(path.join(__dirname, '.')));
 app.post(
     '/updateData',
     (req, res, next) => {
-      upload.array('images')(req, res, function(err) {
+      upload(req, res, function(err) {
         if (err instanceof multer.MulterError) {
           console.error('Multer error:', err);
           return res.status(500).send('Error uploading file.');
@@ -68,14 +71,15 @@ app.post(
         Math.max(...jsonData.posts.map((post) => post.id)) + 1 : 1;
 
         const newPost = {
-          id: nextId, // Use the calculated next ID here
+          id: nextId,
           title: req.body.title,
           author: req.body.author,
           date: req.body.date,
           description: req.body.description,
           content: req.body.content,
-          images: req.files.map((file) => file.path),
+          images: req.files.croppedImage ? [req.files.croppedImage[0].path] : (req.files.images ? req.files.images.map(file => file.path) : []),
         };
+        
 
         jsonData.posts.push(newPost);
 

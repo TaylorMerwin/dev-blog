@@ -11,6 +11,9 @@
       rel="stylesheet"
       href="https://unpkg.com/easymde/dist/easymde.min.css"
     />
+    <!-- Add this in the <head> section of your HTML -->
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <title>Create New Post</title>
   </head>
@@ -33,14 +36,12 @@
         <input type="text" id="author" name="author" /><br /><br />
         <label for="description">Description:</label>
         <input type="text" id="description" name="description" /><br /><br />
-        <label
-          >Upload image
-          <input
-            name="images"
-            type="file"
-            accept="image/png, image/jpeg"
-          /> </label
-        ><br /><br />
+        <label>Upload image
+          <input type="file" name="images" accept="image/png, image/jpeg" id="imageInput" />
+        </label><br /><br />
+        <div class="img-container">
+            <img id="imagePreview" style="max-width: 100%;" />
+        </div>
         <label for="content">Content:</label><br />
         <textarea id="content"></textarea>
 
