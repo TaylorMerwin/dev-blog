@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 cropper = new Cropper(imagePreview, {
                     // Cropper.js options
-                    aspectRatio: 16 / 9,
+                    aspectRatio: 4 / 3,
                     viewMode: 1,
                 });
             };
