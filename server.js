@@ -1,10 +1,15 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
+import express from 'express';
+import path from 'path';
+import {fileURLToPath} from 'url';
+import fs from 'fs';
+import multer from 'multer';
+import {getUsers} from './database.js';
+
+// Create __dirname equivalent in ES6 module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
 
 
 const storage = multer.diskStorage({
@@ -27,6 +32,16 @@ app.use(express.urlencoded({extended: true}));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '.')));
+
+// get all users
+app.get('/users', async (req, res) => {
+  try {
+    const users = await getUsers();
+    res.json(users); // Use res.json to send JSON response
+  } catch (error) {
+    res.status(500).send('Error fetching users');
+  }
+});
 
 app.post(
     '/updateData',
@@ -95,8 +110,14 @@ app.post(
     },
 );
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.log(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+app.listen(8080, () => {
+  console.log('Server running on port 8080');
 });
 
 
