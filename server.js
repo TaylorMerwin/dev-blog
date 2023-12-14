@@ -2,18 +2,29 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = 3000;
 
-app.get('/getLatestPost', (req, res) => {
-  const data = JSON.parse(
-      fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'),
-  );
-  // Assuming the latest post is at the end
-  const latestPost = data.posts[data.posts.length - 1];
-  res.json(latestPost);
-});
+/**
+ * Hashes the password using bcrypt.
+ * @return {Promise<string>} The hashed password.
+ */
+async function hashPassword() {
+  const password = 'password';
+  const saltRounds = 10;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    console.log('Hashed Password:', hashedPassword);
+    return hashedPassword;
+  } catch (error) {
+    console.error('Error hashing password:', error);
+  }
+}
+
+hashPassword();
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -24,9 +35,9 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage }).fields([
-  { name: 'images', maxCount: 5 },
-  { name: 'croppedImage', maxCount: 1 }
+const upload = multer({storage: storage}).fields([
+  {name: 'images', maxCount: 5},
+  {name: 'croppedImage', maxCount: 1},
 ]);
 
 // Middleware to parse POST requests
@@ -67,8 +78,10 @@ app.post(
         // Determine the next ID
         // If there are no posts, start with ID 1
         // otherwise, increment the highest ID by 1
-        const nextId = jsonData.posts.length > 0 ?
-        Math.max(...jsonData.posts.map((post) => post.id)) + 1 : 1;
+        const nextId =
+        jsonData.posts.length > 0 ?
+          Math.max(...jsonData.posts.map((post) => post.id)) + 1 :
+          1;
 
         const newPost = {
           id: nextId,
@@ -77,9 +90,12 @@ app.post(
           date: req.body.date,
           description: req.body.description,
           content: req.body.content,
-          images: req.files.croppedImage ? [req.files.croppedImage[0].path] : (req.files.images ? req.files.images.map(file => file.path) : []),
+          images: req.files.croppedImage ?
+          [req.files.croppedImage[0].path] :
+          req.files.images ?
+          req.files.images.map((file) => file.path) :
+          [],
         };
-        
 
         jsonData.posts.push(newPost);
 
@@ -101,3 +117,5 @@ app.post(
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
