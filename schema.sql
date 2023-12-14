@@ -1,4 +1,9 @@
-CREATE DATABASE Bloggy;
+--Bloggy Database Schema
+DROP DATABASE IF EXISTS `Bloggy`;
+
+CREATE DATABASE IF NOT EXISTS `Bloggy`;
+
+USE `Bloggy`;
 
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
