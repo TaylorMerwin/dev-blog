@@ -2,29 +2,10 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = 3000;
 
-/**
- * Hashes the password using bcrypt.
- * @return {Promise<string>} The hashed password.
- */
-async function hashPassword() {
-  const password = 'password';
-  const saltRounds = 10;
-
-  try {
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log('Hashed Password:', hashedPassword);
-    return hashedPassword;
-  } catch (error) {
-    console.error('Error hashing password:', error);
-  }
-}
-
-hashPassword();
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
