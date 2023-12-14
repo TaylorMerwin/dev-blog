@@ -24,4 +24,7 @@ CREATE TABLE BlogPosts (
 );
 
 INSERT INTO Users (username, password_hash, email)
-VALUES ('default_user', 'default_password_hash', 'default@example.com');
+VALUES ('default_user', '$2b$10$KGh.TdmfqH54j5RTphTN8e72YQwZjlnr5RswpS.ky9fXWnq.t/fTm', 'default@example.com');
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'ej^4s{7%?QpHjh';
+GRANT ALL PRIVILEGES ON Bloggy.* TO 'admin'@'localhost';
