@@ -1,0 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+}
+
+/* Style for the header */
+.header {
+  background-color: rgb(58, 58, 58);
+  /* Different background color */
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: flex;
+  color: white;
+}
+
+
+/* Style for the header name/logo */
+.header h1 {
+  margin: 0;
+  /* Removes default margin */
+  font-size: 24px;
+  /* Example font size */
+}
+
+/* Style for the search bar */
+.header input[type="search"] {
+  padding: 5px;
+  font-size: 14px;
+  flex-grow: 0;
+  margin: 0 10px;
+}
+
+/* Style for navigation buttons */
+.header a {
+  padding: 10px 15px;
+  margin-left: 10px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.header a:hover {
+  background-color: #ccc;
+  /* Color changes on hover */
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  min-width: 50%;
+  /* Match the min-width of the .featured class */
+}
+
+@media screen and (max-width: 600px) {
+  .posts {
+    width: 100%;
+    /* Match the width of the .featured class on narrow screens */
+  }
+}
+
+
+.featured {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid white;
+  text-align: center;
+  color: white;
+  min-width: 50%;
+
+  height: auto;
+}
+
+@media screen and (max-width: 600px) {
+  .featured {
+    width: 100%;
+  }
+}
+
+.featured-image-container {
+  width: 100%;
+
+  padding-top: 56.25%;
+  margin: 0;
+  /* 9/16 = 0.5625 */
+  position: relative;
+  background-color: gray;
+}
+
+.featured-image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.featured-text-container {
+  padding: 10px;
+}
+
+.featured-text-container p {
+  font-size: calc(12px + .5vw);
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 10px;
+}
