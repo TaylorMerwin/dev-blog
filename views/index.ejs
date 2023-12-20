@@ -4,20 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Bloggy</title>
 </head>
 
 <body>
-  <h1>Bloggy</h1>
-  <h3>Post Test</h3>
-  <% posts.forEach(function(post) { %>
-    <p>
-      <strong>Title:</strong>
-      <%= post.title %><br>
-        <strong>Content:</strong>
-        <%= post.content %>
-    </p>
-    <% }); %>
+  <header class="header">
+    <h1>Bloggy</h1>
+    <input type="search" placeholder="Search...">
+    <nav>
+      <a href="#">Create</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+  <div class="posts">
+    <section class="featured">
+      <div class="featured-image-container">
+        <img src="https://placehold.co/600x400/EEE/31343C" alt="Featured Blog Post Image">
+      </div>
+      <div class="featured-text-container">
+        <p>Author</p>
+        <p>Date</p>
+        <% posts.forEach(function(post) { %>
+          <h2>
+            <%= post.title %>
+          </h2>
+          <h3>
+            <%= post.content %>
+          </h3>
+          <% }); %>
+      </div>
+    </section>
+  </div>
+
 </body>
 
 </html>
