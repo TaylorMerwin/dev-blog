@@ -21,14 +21,13 @@ CREATE TABLE BlogPosts (
     author_id INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     image_path VARCHAR(255),
-    FOREIGN KEY (author_id) REFERENCES Users(user_id)
 );
 
 INSERT INTO Users (username, password_hash, email)
-VALUES ('default_user', '$2b$10$KGh.TdmfqH54j5RTphTN8e72YQwZjlnr5RswpS.ky9fXWnq.t/fTm', 'default@example.com');
+VALUES ('dev_user', 'hashbrowns', 'default@example.com');
 
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'ej^4s{7%?QpHjh';
 GRANT ALL PRIVILEGES ON Bloggy.* TO 'admin'@'localhost';
 
 INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
-VALUES ('My First Post', 'This is my first post', 'This is the content of my first post', 1, 'uploads/dolphin.jpg');
+VALUES ('It came from Planetscale', 'Straight from the underground', 'This is the content that makes up the test post!', 1, 'uploads/dolphin.jpg');

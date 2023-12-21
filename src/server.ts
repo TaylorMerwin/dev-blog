@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getPost, getPosts } from './database';
+import { getPost, getPosts, getPostPreview } from './database';
 
 const app = express();
 const port = 8080;
@@ -14,10 +14,11 @@ app.use(express.urlencoded({extended: true}));
 
 app.get('/', async (req, res) => {
   try {
-    const posts = await getPosts();
-    res.render('index', { posts });
+    const post = await getPostPreview('1');
+    res.render('index', { post });
+    console.log(post);
   } catch (error) {
-    res.status(500).send('Error fetching posts');
+    res.status(500).send('Error fetching post');
   }
 
 });
@@ -28,6 +29,17 @@ app.get('/blogPost/:post_id', async (req, res) => {
   try {
     const id = req.params.post_id;
     const post = await getPost(id);
+    res.json(post); // Use res.json to send JSON response
+  } catch (error) {
+    res.status(500).send('Error fetching post');
+  }
+});
+
+// get a post preview by id
+app.get('/postPreview/:post_id', async (req, res) => {
+  try {
+    const id = req.params.post_id;
+    const post = await getPostPreview(id);
     res.json(post); // Use res.json to send JSON response
   } catch (error) {
     res.status(500).send('Error fetching post');

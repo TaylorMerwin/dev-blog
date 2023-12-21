@@ -23,20 +23,17 @@
         <img src="https://placehold.co/600x400/EEE/31343C" alt="Featured Blog Post Image">
       </div>
       <div class="featured-text-container">
-        <p>Author</p>
-        <p>Date</p>
-        <% posts.forEach(function(post) { %>
-          <h2>
-            <%= post.title %>
-          </h2>
-          <h3>
-            <%= post.content %>
-          </h3>
-          <% }); %>
+        <% if (post) { %>
+          <p>
+            <%= post[0].author_name %>
+          </p>
+          <!-- rest of your code -->
+          <% } else { %>
+            <p>Post not found.</p>
+            <% } %>
       </div>
     </section>
   </div>
-
 </body>
 
 </html>
