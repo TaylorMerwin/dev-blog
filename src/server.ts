@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getPost, getPosts, getPostPreview } from './database';
+import { getPost, getPosts, getPostPreview, createBlogPost } from './database';
 
 const app = express();
 const port = 8080;
@@ -17,7 +17,8 @@ app.get('/', async (req, res) => {
     const post = await getPostPreview('1');
     res.render('index', { post });
     console.log(post);
-  } catch (error) {
+  }
+   catch (error) {
     res.status(500).send('Error fetching post');
   }
 
@@ -61,6 +62,24 @@ app.get('/blogPosts/', async (req, res) => {
   } catch (error) {
     console.error('Error in GET /blogPosts/ handler:', error);
     res.status(500).send('Error fetching posts');
+  }
+});
+
+// POST route to create a new blog post
+app.post('/newPost/', async (req, res) => {
+  console.log('Handling POST /blogPosts/ request...');
+
+  // Extract data from request body
+  const { title, postDescription, content, authorId, imagePath } = req.body;
+
+  try {
+    console.log('Calling createBlogPost...');
+    const result = await createBlogPost(title, postDescription, content, authorId, imagePath);
+    console.log('createBlogPost executed, sending response...');
+    res.status(201).send(result);
+  } catch (error) {
+    console.error('Error in POST /blogPosts/ handler:', error);
+    res.status(500).send('Error creating post');
   }
 });
 
