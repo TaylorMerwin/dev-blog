@@ -23,6 +23,10 @@ app.get('/', async (req, res) => {
 
 });
 
+app.get('/create', (req, res) => {
+  res.render('create');
+});
+
 
 // get a post by id
 app.get('/blogPost/:post_id', async (req, res) => {
