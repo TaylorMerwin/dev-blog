@@ -19,7 +19,7 @@
 
   <section class="form-section">
     <h1>Create a New Blog Post</h1>
-    <form enctype="multipart/form-data">
+    <form enctype="multipart/form-data" action="/newPost/" method="POST">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" /><br /><br />
       <label for="author">Author:</label>
@@ -33,7 +33,7 @@
         <img id="imagePreview" style="max-width: 100%;" />
       </div>
       <label for="content">Content:</label><br />
-      <textarea id="content"></textarea>
+      <textarea id="content" name="content"></textarea>
 
       <br /><br />
       <input id="submitButton" type="submit" value="Submit" />

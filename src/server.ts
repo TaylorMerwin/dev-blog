@@ -1,4 +1,21 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+
+// Configure multer storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        // Generate a unique file name with the original extension
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
 
 import { getPost, getPosts, getPostPreview, createBlogPost } from './database';
 
@@ -9,19 +26,17 @@ app.set("view engine", "ejs");
 
 // app.js
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', async (req, res) => {
   try {
-    const post = await getPostPreview('1');
-    res.render('index', { post });
-    console.log(post);
+    const posts = await getPosts(); // Fetch all posts
+    res.render('index', { posts });  // Pass the posts to the template
+  } catch (error) {
+    res.status(500).send('Error fetching posts');
   }
-   catch (error) {
-    res.status(500).send('Error fetching post');
-  }
-
 });
 
 app.get('/create', (req, res) => {
@@ -66,20 +81,24 @@ app.get('/blogPosts/', async (req, res) => {
 });
 
 // POST route to create a new blog post
-app.post('/newPost/', async (req, res) => {
-  console.log('Handling POST /blogPosts/ request...');
+app.post('/newPost/', upload.single('images'), async (req, res) => {
+  console.log('Handling POST /newPost/ request...');
 
   // Extract data from request body
-  const { title, postDescription, content, authorId, imagePath } = req.body;
+  const { title, description: postDescription, author: authorId, content } = req.body;
+  const imagePath = req.file ? req.file.path : null;
 
   try {
-    console.log('Calling createBlogPost...');
-    const result = await createBlogPost(title, postDescription, content, authorId, imagePath);
-    console.log('createBlogPost executed, sending response...');
-    res.status(201).send(result);
+      console.log('Calling createBlogPost...');
+      const result = await createBlogPost(title, postDescription, content, parseInt(authorId), imagePath);
+      console.log('createBlogPost executed, sending response...');
+      //res.status(201).send(result); // Puts debug message on the screen
+
+      // Redirect the user to the home page after successful post creation
+      res.redirect('/');  // Assuming '/' is your home page route
   } catch (error) {
-    console.error('Error in POST /blogPosts/ handler:', error);
-    res.status(500).send('Error creating post');
+      console.error('Error in POST /newPost/ handler:', error);
+      res.status(500).send('Error creating post');
   }
 });
 
