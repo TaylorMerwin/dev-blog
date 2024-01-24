@@ -49,7 +49,13 @@ export async function getPosts() {
 }
 
 // Create a new blog post 
-export async function createBlogPost(title: string, postDescription: string, content: string, authorId: number, imagePath?: string) {
+export async function createBlogPost(
+  title: string, 
+  postDescription: string, 
+  content: string, 
+  authorId: number, 
+  imagePath: string | null
+) {
   // Construct the SQL query with placeholders for the parameters
   const query = `
   INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
@@ -57,10 +63,8 @@ export async function createBlogPost(title: string, postDescription: string, con
 
   // Execute the query with the provided parameters.
   // If imagePath is not provided, it defaults to NULL.
-  await pool.query(query, [title, postDescription, content, authorId, imagePath || null]);
+  await pool.query(query, [title, postDescription, content, authorId, imagePath]);
 
   // Optionally, you can return some data, like a confirmation message or the ID of the newly inserted post
   return { message: 'Blog post created successfully' };
 }
-
-
