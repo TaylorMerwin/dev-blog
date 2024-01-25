@@ -18,6 +18,18 @@ Bloggy is a new platform for writing and sharing technical blog posts.
 * **Hosting** Bloggy is currently still in development but we are looking towards hosting on a Cloud Provider to enable a shared experience.
 * **Search** We plan to add search to ensure users can find the exact Blog they are looking for.
 
+## Installation
+1. Clone the main repo found at https://github.com/TaylorMerwin/bloggy
+2. Install Node.js on your development machine
+3. Install required packages with `npm install`
+4. Create `.env` file with Database credentials
+
+## Commands
+Run development (Typescript) `npm run dev`
+Build the application (compile)`npm run build`
+Run the build (JavaScript) `npm start`
+
+
 ## Contributing :hammer_and_wrench:
 
 Contributions to Bloggy are always welcome. Whether it's bug fixes, feature additions, or improvements in documentation, your help is appreciated. Submit your pull request today to join the revolution!
