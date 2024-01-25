@@ -25,9 +25,9 @@ Bloggy is a new platform for writing and sharing technical blog posts.
 4. Create `.env` file with Database credentials
 
 ## Commands
-Run development (Typescript) `npm run dev`
-Build the application (compile)`npm run build`
-Run the build (JavaScript) `npm start`
+* Run development (Typescript) `npm run dev`
+* Build the application (compile)`npm run build`
+* Run the build (JavaScript) `npm start`
 
 
 ## Contributing :hammer_and_wrench:
