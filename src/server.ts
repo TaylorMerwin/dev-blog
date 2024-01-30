@@ -85,17 +85,17 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
   console.log('Handling POST /newPost/ request...');
 
   // Extract data from request body
-  const { title, description: postDescription, author: authorId, content } = req.body;
+  const { title, description: postDescription, content } = req.body;
   const imagePath = req.file ? req.file.path : null;
+
+  // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
+  const authorId = 1;
 
   try {
       console.log('Calling createBlogPost...');
-      const result = await createBlogPost(title, postDescription, content, parseInt(authorId), imagePath);
+      const result = await createBlogPost(title, postDescription, content, authorId, imagePath);
       console.log('createBlogPost executed, sending response...');
-      //res.status(201).send(result); // Puts debug message on the screen
-
-      // Redirect the user to the home page after successful post creation
-      res.redirect('/');  // Assuming '/' is your home page route
+      res.redirect('/');
   } catch (error) {
       console.error('Error in POST /newPost/ handler:', error);
       res.status(500).send('Error creating post');
