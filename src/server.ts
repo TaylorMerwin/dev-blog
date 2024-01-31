@@ -44,6 +44,21 @@ app.get('/create', (req, res) => {
 });
 
 
+app.get('/view/:post_id', async (req, res) => {
+  try {
+    const id = req.params.post_id; // Get the post id from the route parameter
+    const post = await getPost(id); // Fetch the post with the given id
+    console.log(post); // Log the post to the console to verify it was fetched
+    //res.json(post);      
+    res.render('view', { post }); // Pass the post to the view.ejs template
+  } catch (error) {
+    res.status(500).send('Error fetching post');
+  }
+});
+
+
+
+
 // get a post by id
 app.get('/blogPost/:post_id', async (req, res) => {
   try {
@@ -90,7 +105,8 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
 
   try {
       console.log('Calling createBlogPost...');
-      const result = await createBlogPost(title, postDescription, content, parseInt(authorId), imagePath);
+      await createBlogPost(title, postDescription, content, parseInt(authorId), imagePath);
+      //const result = await createBlogPost(title, postDescription, content, parseInt(authorId), imagePath);
       console.log('createBlogPost executed, sending response...');
       //res.status(201).send(result); // Puts debug message on the screen
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css" />
+  <title>Bloggy</title>
+</head>
+
+<body>
+  <header class="header">
+    <h1>Bloggy</h1>
+    <input type="search" placeholder="Search...">
+    <nav>
+      <a href="/create">Create</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+
+  <% console.log(post) %>
+    <main>
+      <div class="article-container">
+        <h1 class="article-title">
+          <%= post.title %>
+        </h1>
+        <div class="article-about">
+          <p class="article-date"></p>
+          <p class="article-author">
+          </p>
+        </div>
+        <div class="article-image">
+          <img src="" alt="Article Image" class="article-img" />
+        </div>
+        <div class="article-content">
+          <!-- This is where the blog text will go! -->
+          <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
+          <md-block class="article-body"></md-block>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>Bloggy 2023</p>
+    </footer>
+    <!-- Imported Library that adds md-blocks-->
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+</body>
+
+</html>
