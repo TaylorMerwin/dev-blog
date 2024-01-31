@@ -18,7 +18,7 @@ export async function getPost(postID: string) {
   SELECT *
   FROM BlogPosts
   WHERE post_id = ?`, [postID]);
-  return [row];
+  return row;
 }
 
 export async function getPostPreview(postID: string) {
