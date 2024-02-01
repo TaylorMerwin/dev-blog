@@ -99,7 +99,12 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
 
   // Extract data from request body
   const { title, description: postDescription, content } = req.body;
-  const imagePath = req.file ? req.file.path : null;
+  let imagePath = null;
+
+  if (req.file) {
+      // Extract just the file name from the path
+      imagePath = path.basename(req.file.path);
+  }
 
   // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
   const authorId = 1;
