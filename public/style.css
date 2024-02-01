@@ -123,3 +123,38 @@ body {
 .featured-description p {
   text-align: center;
 }
+
+/* view-blog styling below */
+
+.article-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border: solid;
+  background-color: ivory;
+}
+
+.article-about {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  line-height: 0%;
+}
+
+.article-image img {
+  min-width: 800px;
+  width: 50%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 1rem;
+}
+
+.article-content {
+  text-align: left;
+  max-width: 80%;
+  min-width: 60%;
+}

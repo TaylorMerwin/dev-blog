@@ -44,6 +44,19 @@ app.get('/create', (req, res) => {
 });
 
 
+app.get('/view/:post_id', async (req, res) => {
+  try {
+    const id = req.params.post_id; // Get the post id from the route parameter
+    const post = await getPost(id); // Fetch the post with the given id
+   // console.log("the post is " + post); // Log the post to the console to verify it was fetched
+   // res.json(post);      
+    res.render('view', { post } ); // Pass the post to the view.ejs template
+  } catch (error) {
+    res.status(500).send('Error fetching post');
+  }
+});
+
+
 // get a post by id
 app.get('/blogPost/:post_id', async (req, res) => {
   try {
