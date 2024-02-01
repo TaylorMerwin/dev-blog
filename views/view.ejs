@@ -11,7 +11,9 @@
 
 <body>
   <header class="header">
-    <h1>Bloggy</h1>
+    <a href="/">
+      <h1>Bloggy</h1>
+    </a>
     <input type="search" placeholder="Search...">
     <nav>
       <a href="/create">Create</a>
@@ -28,14 +30,16 @@
       </h1>
       <div class="article-about">
         <p class="article-date">
-          <%= post.created_at %>
+          <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
+            day: 'numeric' , year: 'numeric' }); %>
+            <%= formattedDate %>
         </p>
         <p class="article-author">
-          post author
+          <%= post.author_name %>
         </p>
       </div>
       <div class="article-image">
-        <img src="" alt="Article Image" class="article-img" />
+        <img src="<%=post.image_path%>" alt="Article Image" class="article-img" />
       </div>
       <div class="article-content">
         <!-- This is where the blog text will go! -->

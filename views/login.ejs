@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <title>Create new blog</title>
+
+</head>
+
+<body>
+  <header class="header">
+    <h1>Bloggy</h1>
+    <input type="search" placeholder="Search...">
+    <nav>
+      <a href="/">Home</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+  <section>
+    <h1>Login In!!!!</h1>
+    <form enctype="multipart/form-data" action="/loginAction/" method="POST">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" /><br /><br />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" /><br /><br />
+      <input id="submitButton" type="submit" value="Submit" />
+    </form>
+  </section>

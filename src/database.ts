@@ -15,9 +15,18 @@ const pool = mysql.createPool({
 
 export async function getPost(postID: string) {
   const [row] = await pool.query(`
-  SELECT *
-  FROM BlogPosts
-  WHERE post_id = ?`, [postID]);
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.content, 
+    BlogPosts.created_at, 
+    BlogPosts.image_path,
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id
+  WHERE 
+    BlogPosts.post_id = ?`, [postID]);
   return row;
 }
 

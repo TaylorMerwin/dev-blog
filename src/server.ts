@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
+import path from 'path'
+import bcrypt from 'bcrypt';
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -41,6 +42,34 @@ app.get('/', async (req, res) => {
 
 app.get('/create', (req, res) => {
   res.render('create');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+
+app.post('/loginAction/', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+
+    if (user.rows.length > 0) {
+      const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+      if (validPassword) {
+        res.send('Logged in!');
+      } else {
+        res.send('Invalid password.');
+      }
+    } else {
+      res.send('User not found.');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error.');
+  }
 });
 
 
