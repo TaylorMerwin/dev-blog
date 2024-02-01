@@ -35,11 +35,16 @@
       </div>
       <label for="content">Content:</label><br />
       <textarea id="content" name="content"></textarea>
-
+      <script>
+        var easyMDE = new EasyMDE({
+          element: document.getElementById('content')
+        });
+      </script>
       <br /><br />
       <input id="submitButton" type="submit" value="Submit" />
     </form>
   </section>
   <script src="src/create-blog.js"></script>
 </body>
+
 </html>
