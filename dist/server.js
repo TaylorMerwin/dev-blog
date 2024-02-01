@@ -39,6 +39,18 @@ app.get('/', async (req, res) => {
 app.get('/create', (req, res) => {
     res.render('create');
 });
+app.get('/view/:post_id', async (req, res) => {
+    try {
+        const id = req.params.post_id; // Get the post id from the route parameter
+        const post = await (0, database_1.getPost)(id); // Fetch the post with the given id
+        // console.log("the post is " + post); // Log the post to the console to verify it was fetched
+        // res.json(post);      
+        res.render('view', { post }); // Pass the post to the view.ejs template
+    }
+    catch (error) {
+        res.status(500).send('Error fetching post');
+    }
+});
 // get a post by id
 app.get('/blogPost/:post_id', async (req, res) => {
     try {
@@ -79,15 +91,15 @@ app.get('/blogPosts/', async (req, res) => {
 app.post('/newPost/', upload.single('images'), async (req, res) => {
     console.log('Handling POST /newPost/ request...');
     // Extract data from request body
-    const { title, description: postDescription, author: authorId, content } = req.body;
+    const { title, description: postDescription, content } = req.body;
     const imagePath = req.file ? req.file.path : null;
+    // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
+    const authorId = 1;
     try {
         console.log('Calling createBlogPost...');
-        const result = await (0, database_1.createBlogPost)(title, postDescription, content, parseInt(authorId), imagePath);
+        const result = await (0, database_1.createBlogPost)(title, postDescription, content, authorId, imagePath);
         console.log('createBlogPost executed, sending response...');
-        //res.status(201).send(result); // Puts debug message on the screen
-        // Redirect the user to the home page after successful post creation
-        res.redirect('/'); // Assuming '/' is your home page route
+        res.redirect('/');
     }
     catch (error) {
         console.error('Error in POST /newPost/ handler:', error);
