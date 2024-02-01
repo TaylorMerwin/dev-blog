@@ -25,7 +25,7 @@
         <section class="featured">
           <div class="featured-image-container">
             <!-- If there's an image, show it, otherwise show a placeholder -->
-            <img src="<%= post.image_path ? post.image_path : 'https://placehold.co/600x400/EEE/31343C' %>"
+            <img src="./uploads/<%= post.image_path ? post.image_path : 'https://placehold.co/600x400/EEE/31343C' %>"
               alt="Featured Blog Post Image">
           </div>
           <div class="featured-text-container">
