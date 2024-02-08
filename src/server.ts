@@ -17,8 +17,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
-import { getPost, getPosts, getPostPreview, createBlogPost } from './database';
+import { getPost, getPosts, getUsers, getPostPreview, createBlogPost, getUserByUsername, getAllTableNames } from './database';
 
 const app = express();
 const port = 8080;
@@ -48,30 +47,35 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
-
 app.post('/loginAction/', async (req, res) => {
-  const { username, password } = req.body;
+  console.log(req.body); // Debugging
+  const { username, password } = req.body; // Ensure these match your form input names
+
+  if (!username || !password) {
+      // Handle missing username or password appropriately
+      return res.status(400).send("Username and password are required.");
+  }
 
   try {
-    const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+      // Use the getUserByUsername function here
+      const user = await getUserByUsername(username);
 
-    if (user.rows.length > 0) {
-      const validPassword = await bcrypt.compare(password, user.rows[0].password);
-
-      if (validPassword) {
-        res.send('Logged in!');
+      if (user) {
+          // Directly compare the password with password_hash
+          if (password === user.password_hash) {
+              // Proceed with login success logic
+              res.send('Logged in!');
+          } else {
+              res.send('Invalid password.');
+          }
       } else {
-        res.send('Invalid password.');
+          res.send('User not found.');
       }
-    } else {
-      res.send('User not found.');
-    }
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error.');
+      console.error(err);
+      res.status(500).send('Server error.');
   }
 });
-
 
 app.get('/view/:post_id', async (req, res) => {
   try {
@@ -97,6 +101,17 @@ app.get('/blogPost/:post_id', async (req, res) => {
   }
 });
 
+// get all users (usernames and passwords)
+app.get('/getUsers/', async (req, res) => {
+  try {
+    const users = await getUsers(); // Fetch all users
+    res.json(users); // Send the users as JSON response
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).send('Error fetching users');
+  }
+});
+
 // get a post preview by id
 app.get('/postPreview/:post_id', async (req, res) => {
   try {
@@ -119,6 +134,16 @@ app.get('/blogPosts/', async (req, res) => {
   } catch (error) {
     console.error('Error in GET /blogPosts/ handler:', error);
     res.status(500).send('Error fetching posts');
+  }
+});
+
+app.get('/getAllTables', async (req, res) => {
+  try {
+    const tableNames = await getAllTableNames();
+    res.json({ tables: tableNames });
+  } catch (error) {
+    console.error('Error in /getAllTables route:', error);
+    res.status(500).send('Error fetching table names');
   }
 });
 

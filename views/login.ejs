@@ -22,11 +22,9 @@
 
   <section>
     <h1>Login In!!!!</h1>
-    <form enctype="multipart/form-data" action="/loginAction/" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" /><br /><br />
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" /><br /><br />
-      <input id="submitButton" type="submit" value="Submit" />
+    <form action="/loginAction/" method="post">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
     </form>
   </section>
