@@ -57,6 +57,17 @@ export async function getPosts() {
   }
 }
 
+export async function getUsers() {
+  try {
+      const query = 'SELECT username, password_hash FROM Users';
+      const [users] = await pool.query(query);
+      return users;
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error; // or handle it as needed
+  }
+}
+
 // Create a new blog post 
 export async function createBlogPost(
   title: string, 
@@ -77,3 +88,24 @@ export async function createBlogPost(
   // Optionally, you can return some data, like a confirmation message or the ID of the newly inserted post
   return { message: 'Blog post created successfully' };
 }
+
+export async function getUserByUsername(username: string): Promise<any> {
+  console.log("Attempting to find user:", username);
+  const query = 'SELECT * FROM Users WHERE username = ?'; // Ensure 'Users' matches the case in your DB
+  const [results] = await pool.query(query, [username]);
+  const rows = <any>results;
+  return rows[0]; // Assuming 'username' is unique
+}
+
+export async function getAllTableNames() {
+  try {
+    const query = `SHOW TABLES`;
+    const [tables] = await pool.query(query) as any[];
+    const tableNames = tables.map((table: any) => Object.values(table)[0]);
+    return tableNames;
+  } catch (error) {
+    console.error('Error fetching table names:', error);
+    throw error;
+  }
+}
+
