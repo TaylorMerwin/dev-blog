@@ -89,12 +89,13 @@ export async function createBlogPost(
   return { message: 'Blog post created successfully' };
 }
 
-export async function getUserByUsername(username: string): Promise<any> {
-  console.log("Attempting to find user:", username);
-  const query = 'SELECT * FROM Users WHERE username = ?'; // Ensure 'Users' matches the case in your DB
-  const [results] = await pool.query(query, [username]);
-  const rows = <any>results;
-  return rows[0]; // Assuming 'username' is unique
+export async function getUserByUsername(username: string) {
+  console.log("Attempting to find user: " + [username]);
+  const [row] = await pool.query(`
+  SELECT * 
+  FROM Users
+  WHERE username = ?`, [username]); 
+  return row;
 }
 
 export async function getAllTableNames() {
