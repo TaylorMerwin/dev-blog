@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { getPost, getPosts, getUsers, getPostPreview, createBlogPost, getUserByUsername, getAllTableNames } from './database';
+import { getPost, getPosts, getUsers, getPostPreview, createBlogPost, createUser, getUserByUsername } from './database';
 
 const app = express();
 const port = 8080;
@@ -29,6 +29,9 @@ app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+
+// Page routes
 
 app.get('/', async (req, res) => {
   try {
@@ -47,8 +50,13 @@ app.get('/login', (req, res) => {
   res.render('login');
 });
 
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+// Action routes
+
 app.post('/loginAction/', async (req, res) => {
-  console.log(req.body); // Debugging
   const { username, password } = req.body; // Ensure these match your form input names
 
   if (!username || !password) {
@@ -137,16 +145,6 @@ app.get('/blogPosts/', async (req, res) => {
   }
 });
 
-app.get('/getAllTables', async (req, res) => {
-  try {
-    const tableNames = await getAllTableNames();
-    res.json({ tables: tableNames });
-  } catch (error) {
-    console.error('Error in /getAllTables route:', error);
-    res.status(500).send('Error fetching table names');
-  }
-});
-
 // POST route to create a new blog post
 app.post('/newPost/', upload.single('images'), async (req, res) => {
   console.log('Handling POST /newPost/ request...');
@@ -165,12 +163,35 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
 
   try {
       console.log('Calling createBlogPost...');
-      const result = await createBlogPost(title, postDescription, content, authorId, imagePath);
+      await createBlogPost(title, postDescription, content, authorId, imagePath);
       console.log('createBlogPost executed, sending response...');
       res.redirect('/');
   } catch (error) {
       console.error('Error in POST /newPost/ handler:', error);
       res.status(500).send('Error creating post');
+  }
+});
+
+
+// POST route to create a new user
+app.post('/registerAction/', async (req, res) => {
+  console.log('Handling POST /newUser/ request...');
+
+  // Extract data from request body
+  const { username, email, password } = req.body;
+
+  try {
+      console.log('Hashing PW...');
+
+      // Hash the password
+      const password_hash = await bcrypt.hash(password, 10);
+
+      await createUser(username, email, password_hash);
+      console.log('createUser executed, sending response...');
+      res.redirect('/login');
+  } catch (error) {
+      console.error('Error in POST /newUser/ handler:', error);
+      res.status(500).send('Error creating user');
   }
 });
 

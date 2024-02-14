@@ -5,8 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-  <title>Login - Bloggy</title>
+  <title>Sign Up - Bloggy</title>
 
 </head>
 
@@ -21,10 +20,11 @@
   </header>
 
   <section>
-    <h1>Login In</h1>
-    <form action="/loginAction/" method="post">
+    <h1>Create a new account!</h1>
+    <form action="/registerAction/" method="post">
       <input type="text" name="username" placeholder="Username" required>
+      <input type="text" name="email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
-      <button type="submit">Login</button>
+      <button type="submit">Create</button>
     </form>
   </section>

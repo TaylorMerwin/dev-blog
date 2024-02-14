@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { RowDataPacket } from 'mysql2/promise';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,6 +13,7 @@ const pool = mysql.createPool({
 }
 });
 
+//Retrieval functions
 
 export async function getPost(postID: string) {
   const [row] = await pool.query(`
@@ -68,6 +70,28 @@ export async function getUsers() {
   }
 }
 
+interface User {
+  username: string;
+  password_hash: string;
+  // include other properties as needed
+}
+
+// Returns a user entry from the Users table by username
+export async function getUserByUsername(username: string): Promise<User | null> {
+  const [rows] = await pool.query<RowDataPacket[]>(`
+  SELECT * 
+  FROM Users
+  WHERE username = ?`, [username]);
+
+  if (!rows.length) {
+    return null;
+  }
+
+  return rows[0] as User;
+}
+
+// Insert Functions
+
 // Create a new blog post 
 export async function createBlogPost(
   title: string, 
@@ -89,24 +113,13 @@ export async function createBlogPost(
   return { message: 'Blog post created successfully' };
 }
 
-export async function getUserByUsername(username: string) {
-  console.log("Attempting to find user: " + [username]);
-  const [row] = await pool.query(`
-  SELECT * 
-  FROM Users
-  WHERE username = ?`, [username]); 
-  return row;
-}
 
-export async function getAllTableNames() {
-  try {
-    const query = `SHOW TABLES`;
-    const [tables] = await pool.query(query) as any[];
-    const tableNames = tables.map((table: any) => Object.values(table)[0]);
-    return tableNames;
-  } catch (error) {
-    console.error('Error fetching table names:', error);
-    throw error;
-  }
-}
+export async function createUser(username: string, email: string, passwordHash: string) {
+  const query = `
+  INSERT INTO Users (username, email, password_hash)
+  VALUES (?, ?, ?)`;
 
+  await pool.query(query, [username, email, passwordHash]);
+
+  return { message: 'User created successfully' };
+}
