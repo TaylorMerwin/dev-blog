@@ -58,7 +58,6 @@ app.get('/register', (req, res) => {
 
 app.post('/loginAction/', async (req, res) => {
   const { username, password } = req.body; // Ensure these match your form input names
-
   if (!username || !password) {
       // Handle missing username or password appropriately
       return res.status(400).send("Username and password are required.");
@@ -67,10 +66,10 @@ app.post('/loginAction/', async (req, res) => {
   try {
       // Use the getUserByUsername function here
       const user = await getUserByUsername(username);
-
       if (user) {
-          // Directly compare the password with password_hash
-          if (password === user.password_hash) {
+          // Use bcrypt.compare to compare the password with the hashed password
+          const match = await bcrypt.compare(password, user.password_hash);
+          if (match) {
               // Proceed with login success logic
               res.send('Logged in!');
           } else {
@@ -181,6 +180,33 @@ app.post('/registerAction/', async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
+
+    if (!username || !password) {
+      // Handle missing username or password appropriately
+      return res.status(400).send("Username and password are required.");
+  }
+
+      // check if user already exists
+      // Use the getUserByUsername function here
+      const user = await getUserByUsername(username);
+
+      // User already exists
+      if (user) {
+          res.send('Username already taken.');
+      }
+
+      else if (password.length < 8) {
+          res.send('Password must be at least 8 characters.');
+      }
+
+      // Ensure valid email format
+      else if (!email.includes('@')) {
+          res.send('Invalid email.');
+      }
+
+      // basic validation good, continue
+      else {
+
       console.log('Hashing PW...');
 
       // Hash the password
@@ -189,7 +215,9 @@ app.post('/registerAction/', async (req, res) => {
       await createUser(username, email, password_hash);
       console.log('createUser executed, sending response...');
       res.redirect('/login');
-  } catch (error) {
+
+
+  }} catch (error) {
       console.error('Error in POST /newUser/ handler:', error);
       res.status(500).send('Error creating user');
   }
