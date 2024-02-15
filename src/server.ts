@@ -157,6 +157,12 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
       imagePath = path.basename(req.file.path);
   }
 
+  //Check that all fields have data in them
+    // Check if all fields have data
+    if (!title || !postDescription || !content) {
+      return res.status(400).send('All fields are required');
+    }
+
   // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
   const authorId = 1;
 
