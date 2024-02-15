@@ -17,8 +17,19 @@
     <input type="search" placeholder="Search...">
     <nav>
       <a href="/create">Create</a>
-      <a href="#">About</a>
-      <a href="#">About</a>
+
+      <% if (!user) { %>
+        <a href="/login">Login</a>
+        <a href="/register">Create Account</a>
+        <% } %>
+
+          <a href="https://github.com/TaylorMerwin/bloggy">About</a>
+
+          <% if (user) { %>
+            <a href="/user">User</a>
+            <a href="/logout">Logout</a>
+            <% } %>
+
     </nav>
   </header>
 

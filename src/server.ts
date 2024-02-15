@@ -7,7 +7,7 @@ import session from 'express-session';
 
 declare module 'express-session' {
   export interface SessionData {
-    user: {userId?: number; username?: string; };
+    user: {userId: number; username?: string; };
 }
 }
 
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { getPost, getPosts, getUsers, getPostPreview, createBlogPost, createUser, getUserByUsername } from './database';
+import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
 
 const app = express();
 const port = 8080;
@@ -75,8 +75,17 @@ app.get('/create', isAuthenticated, (req, res) => {
   res.render('create');
 });
 
-app.get('/user', isAuthenticated, (req, res) => {
-  res.render('user');
+app.get('/user', isAuthenticated, async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).send('Please log in to view this page.');
+    }
+  const posts = await getUserPosts(req.session.user.userId.toString());
+  res.render('user', { posts, user: req.session.user });
+  }
+  catch (error) {
+    res.status(500).send('Error fetching posts');
+  }
 });
 
 app.get('/login', (req, res) => {
@@ -103,11 +112,7 @@ app.post('/loginAction/', async (req, res) => {
       if (match) {
         // Set user session
         req.session.user = { userId: user.user_id, username: username };
-        res.send('Logged in!');
-        // Set user session
-
-        // Optionally store the username in the session
-        // You can store other needed properties, but avoid sensitive information
+        res.redirect('/');
 
       } else {
         res.send('Invalid password.');
@@ -138,7 +143,7 @@ app.get('/view/:post_id', async (req, res) => {
     const post = await getPost(id); // Fetch the post with the given id
    // console.log("the post is " + post); // Log the post to the console to verify it was fetched
    // res.json(post);      
-    res.render('view', { post } ); // Pass the post to the view.ejs template
+    res.render('view', { post, user: req.session.user } ); // Pass the post to the view.ejs template
   } catch (error) {
     res.status(500).send('Error fetching post');
   }
@@ -212,12 +217,15 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
     }
 
   // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
-  const authorId = 1;
+  //const authorId = 1;
+
 
   try {
-      console.log('Calling createBlogPost...');
+    if (!req.session.user) {
+      return res.status(401).send('Please log in to create a post.');
+    }
+      const authorId = req.session.user.userId;
       await createBlogPost(title, postDescription, content, authorId, imagePath);
-      console.log('createBlogPost executed, sending response...');
       res.redirect('/');
   } catch (error) {
       console.error('Error in POST /newPost/ handler:', error);

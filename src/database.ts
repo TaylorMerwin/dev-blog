@@ -59,6 +59,23 @@ export async function getPosts() {
   }
 }
 
+export async function getUserPosts(authorID: string) {
+  const [row] = await pool.query(`
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.content, 
+    BlogPosts.created_at, 
+    BlogPosts.image_path,
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id
+  WHERE 
+    BlogPosts.author_id = ?`, [authorID]);
+  return row;
+}
+
 export async function getUsers() {
   try {
       const query = 'SELECT username, password_hash FROM Users';

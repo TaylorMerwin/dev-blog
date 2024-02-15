@@ -14,20 +14,17 @@
     <h1>Bloggy</h1>
     <input type="search" placeholder="Search...">
     <nav>
-      <a href="/create">Create</a>
-
       <% if (!user) { %>
-        <a href="/login">Login/Signup</a>
+        <a href="/login">Login</a>
+        <a href="/register">Create Account</a>
         <% } %>
-          <a href="#">About</a>
 
           <% if (user) { %>
+            <a href="/create">Create</a>
+            <a href="/user">User</a>
             <a href="/logout">Logout</a>
             <% } %>
-
-              <% if (user) { %>
-                <a href="/user">User</a>
-                <% } %>
+              <a href="https://github.com/TaylorMerwin/bloggy">About</a>
 
     </nav>
   </header>

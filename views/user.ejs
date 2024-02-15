@@ -16,7 +16,13 @@
     <nav>
       <a href="/create">Create</a>
 
-      <a href="/logout">Logout</a>
+      <a href="https://github.com/TaylorMerwin/bloggy">About</a>
+
+      <% if (user) { %>
+        <a href="/user">User</a>
+        <a href="/logout">Logout</a>
+        <% } %>
+
     </nav>
   </header>
   <div class="user-info">
@@ -26,6 +32,37 @@
     <p>Favorite Color</p>
     <p>Mothers maiden name</p>
     <p>Favorite food</p>
+
+
+    <div class="posts">
+
+      <% posts.slice().reverse().forEach(function(post) { %>
+        <a href="/view/<%= post.post_id %>">
+          <section class="featured">
+            <div class="featured-image-container">
+              <!-- If there's an image, show it, otherwise show a placeholder -->
+              <img src="./uploads/<%= post.image_path ? post.image_path : 'https://placehold.co/600x400/EEE/31343C' %>"
+                alt="Featured Blog Post Image">
+            </div>
+            <div class="featured-text-container">
+              <p>
+                <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', {
+                  month: 'long' , day: 'numeric' , year: 'numeric' }); %>
+                  <%= formattedDate %>
+              </p>
+              <h2>
+                <%= post.title %>
+              </h2>
+              <div class="featured-description">
+                <p>
+                  <%= post.post_description %>
+                </p>
+              </div>
+            </div>
+          </section>
+        </a>
+        <% }); %>
+    </div>
 
 </body>
 
