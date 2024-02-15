@@ -71,8 +71,10 @@ export async function getUsers() {
 }
 
 interface User {
+  user_id: number;
   username: string;
   password_hash: string;
+
   // include other properties as needed
 }
 

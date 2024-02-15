@@ -2,6 +2,14 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
+
+
+declare module 'express-session' {
+  export interface SessionData {
+    user: {userId?: number; username?: string; };
+}
+}
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -24,11 +32,32 @@ const port = 8080;
 app.set("view engine", "ejs");
 
 
-// app.js
+
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(session({
+  secret: 'my_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  // Choose a suitable storege option? WTF is this?
+}))
+
+
+
+function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (req.session.user) {
+    next(); // The user is logged in, proceed to the route handler
+  } else {
+    // User is not logged in, send an error message or redirect to login
+    res.status(401).send('Please log in to view this page.');
+    // Or redirect to login page: res.redirect('/login');
+  }
+}
+
+
+
 
 
 // Page routes
@@ -42,7 +71,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.get('/create', (req, res) => {
+app.get('/create', isAuthenticated, (req, res) => {
   res.render('create');
 });
 
@@ -57,31 +86,46 @@ app.get('/register', (req, res) => {
 // Action routes
 
 app.post('/loginAction/', async (req, res) => {
-  const { username, password } = req.body; // Ensure these match your form input names
+  const { username, password } = req.body;
   if (!username || !password) {
-      // Handle missing username or password appropriately
-      return res.status(400).send("Username and password are required.");
+    return res.status(400).send("Username and password are required.");
   }
 
   try {
-      // Use the getUserByUsername function here
-      const user = await getUserByUsername(username);
-      if (user) {
-          // Use bcrypt.compare to compare the password with the hashed password
-          const match = await bcrypt.compare(password, user.password_hash);
-          if (match) {
-              // Proceed with login success logic
-              res.send('Logged in!');
-          } else {
-              res.send('Invalid password.');
-          }
+    const user = await getUserByUsername(username);
+    //console.log('User:', user);
+    if (user) {
+      const match = await bcrypt.compare(password, user.password_hash);
+      if (match) {
+        // Set user session
+        req.session.user = { userId: user.user_id, username: username };
+        res.send('Logged in!');
+        // Set user session
+
+        // Optionally store the username in the session
+        // You can store other needed properties, but avoid sensitive information
+
       } else {
-          res.send('User not found.');
+        res.send('Invalid password.');
       }
+    } else {
+      res.send('User not found.');
+    }
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Server error.');
+    console.error(err);
+    res.status(500).send('Server error.');
   }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Could not log out.");
+    }
+    console.log('Congratulations! You are the first person to log out');
+    res.redirect('/');
+  });
 });
 
 app.get('/view/:post_id', async (req, res) => {
