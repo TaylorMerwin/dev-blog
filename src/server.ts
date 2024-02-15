@@ -65,7 +65,7 @@ function isAuthenticated(req: express.Request, res: express.Response, next: expr
 app.get('/', async (req, res) => {
   try {
     const posts = await getPosts(); // Fetch all posts
-    res.render('index', { posts });  // Pass the posts to the template
+    res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
   } catch (error) {
     res.status(500).send('Error fetching posts');
   }
@@ -73,6 +73,10 @@ app.get('/', async (req, res) => {
 
 app.get('/create', isAuthenticated, (req, res) => {
   res.render('create');
+});
+
+app.get('/user', isAuthenticated, (req, res) => {
+  res.render('user');
 });
 
 app.get('/login', (req, res) => {

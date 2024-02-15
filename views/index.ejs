@@ -15,9 +15,20 @@
     <input type="search" placeholder="Search...">
     <nav>
       <a href="/create">Create</a>
-      <a href="/login">Login/Signup</a>
-      <a href="#">About</a>
-      <a href="/logout">Logout</a>
+
+      <% if (!user) { %>
+        <a href="/login">Login/Signup</a>
+        <% } %>
+          <a href="#">About</a>
+
+          <% if (user) { %>
+            <a href="/logout">Logout</a>
+            <% } %>
+
+              <% if (user) { %>
+                <a href="/user">User</a>
+                <% } %>
+
     </nav>
   </header>
   <div class="posts">
