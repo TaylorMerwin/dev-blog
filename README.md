@@ -11,10 +11,10 @@ Bloggy is a new platform for writing and sharing technical blog posts.
 * **Powered by MySQL:** Data is securely stored and retrieved using MySQL, hosted by PlanetScale to ensure stability and future proofing scale.
 * **Photo Uploads** Bloggy supports the uploading of photographs with each blog post, enhancing the user experience.
 * **Server-Side Rendering:** With Node.js and Express at its core, Bloggy ensures fast and efficient server-side rendering for a smoother user experience.
+* **User Authentication:** Users are authenticated to ensure that only logged in users are able to create or edit blog posts.
 
 ## Coming Soon :eyes:
 
-* **User Authentication:** We plan to add authentication to ensure that only verified users have posting privileges.
 * **Hosting** Bloggy is currently still in development but we are looking towards hosting on a Cloud Provider to enable a shared experience.
 * **Search** We plan to add search to ensure users can find the exact Blog they are looking for.
 
