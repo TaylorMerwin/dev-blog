@@ -25,7 +25,7 @@ const app = (0, express_1.default)();
 const port = 8080;
 app.set("view engine", "ejs");
 app.use(express_1.default.static('public'));
-app.use('/uploads', express_1.default.static('uploads'));
+app.use(express_1.default.static('uploads'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
