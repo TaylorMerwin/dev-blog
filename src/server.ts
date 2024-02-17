@@ -28,7 +28,8 @@ const upload = multer({ storage: storage });
 import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
 
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
+
 app.set("view engine", "ejs");
 
 
@@ -285,6 +286,6 @@ app.post('/registerAction/', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });

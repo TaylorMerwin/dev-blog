@@ -22,7 +22,7 @@ const storage = multer_1.default.diskStorage({
 const upload = (0, multer_1.default)({ storage: storage });
 const database_1 = require("./database");
 const app = (0, express_1.default)();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
 app.set("view engine", "ejs");
 app.use(express_1.default.static('public'));
 app.use(express_1.default.static('uploads'));
@@ -242,6 +242,6 @@ app.post('/registerAction/', async (req, res) => {
         res.status(500).send('Error creating user');
     }
 });
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
