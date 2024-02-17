@@ -11,7 +11,9 @@
 
 <body>
   <header class="header">
-    <h1>Bloggy</h1>
+    <a href="/">
+      <h1>Bloggy</h1>
+    </a>
     <input type="search" placeholder="Search...">
     <nav>
       <a href="/create">Create</a>
@@ -41,8 +43,7 @@
           <section class="featured">
             <div class="featured-image-container">
               <!-- If there's an image, show it, otherwise show a placeholder -->
-              <img src="./uploads/<%= post.image_path ? post.image_path : 'https://placehold.co/600x400/EEE/31343C' %>"
-                alt="Featured Blog Post Image">
+              <img src="/<%= post.image_path%>" alt="Featured Blog Post Image">
             </div>
             <div class="featured-text-container">
               <p>
