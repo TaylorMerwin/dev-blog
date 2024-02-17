@@ -34,38 +34,60 @@
   </header>
 
   <% post.slice().forEach(function(post) { %>
-    <%= console.log("The post title is " + post.title) %>
     <main>
       <div class=" article-container">
-      <h1 class="article-title">
-        <%=post.title %>
-      </h1>
-      <div class="article-about">
-        <p class="article-date">
-          <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
-            day: 'numeric' , year: 'numeric' }); %>
-            <%= formattedDate %>
-        </p>
-        <p class="article-author">
-          <%= post.author_name %>
-        </p>
+        <h1 class="article-title">
+          <%=post.title %>
+        </h1>
+        <div class="article-about">
+          <p class="article-date">
+            <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
+              day: 'numeric' , year: 'numeric' }); %>
+              <%= formattedDate %>
+          </p>
+          <p class="article-author">
+            <%= post.author_name %>
+          </p>
+        </div>
+        <div class="article-image">
+          <img src="/<%=post.image_path%>" alt="Article Image" class="article-img" />
+        </div>
+        <div class="article-content">
+          <!-- This is where the blog text will go! -->
+          <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
+          <md-block class="article-body">
+            <%= post.content %>
+          </md-block>
+        </div>
+        <h1 class="article-title">
+          <%=post.title %>
+        </h1>
+        <div class="article-about">
+          <p class="article-date">
+            <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
+              day: 'numeric' , year: 'numeric' }); %>
+              <%= formattedDate %>
+          </p>
+          <p class="article-author">
+            <%= post.author_name %>
+          </p>
+        </div>
+        <div class="article-image">
+          <img src="<%=post.image_path%>" alt="Article Image" class="article-img" />
+        </div>
+        <div class="article-content">
+          <!-- This is where the blog text will go! -->
+          <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
+          <md-block class="article-body">
+            <%= post.content %>
+          </md-block>
+        </div>
       </div>
-      <div class="article-image">
-        <img src="/<%=post.image_path%>" alt="Article Image" class="article-img" />
-      </div>
-      <div class="article-content">
-        <!-- This is where the blog text will go! -->
-        <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
-        <md-block class="article-body">
-          <%= post.content %>
-        </md-block>
-      </div>
-      </div>
-      </main>
-      <% }); %>
+    </main>
+    <% }); %>
 
-        <!-- Imported Library that adds md-blocks-->
-        <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+      <!-- Imported Library that adds md-blocks-->
+      <script type="module" src="https://md-block.verou.me/md-block.js"></script>
 </body>
 
 </html>
