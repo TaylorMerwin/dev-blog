@@ -1,0 +1,3 @@
+runtime: nodejs14 # Specify the Node.js runtime version
+env: standard # Use the standard environment
+instance_class: F1 # Define the instance class (F1 is the smallest available)
