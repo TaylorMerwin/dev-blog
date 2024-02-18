@@ -44,7 +44,7 @@ body {
 }
 
 /* Style for navigation buttons */
-.header a {
+nav a {
   padding: 10px 15px;
   margin-left: 10px;
   background-color: white;
@@ -54,7 +54,7 @@ body {
   color: black;
 }
 
-.header a:hover {
+nav a:hover {
   background-color: #ccc;
   /* Color changes on hover */
 }
