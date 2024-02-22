@@ -9,7 +9,7 @@ import session from 'express-session';
 
 declare module 'express-session' {
   export interface SessionData {
-    user: {userId: number; username?: string; };
+    user: {userId: number; username: string; };
 }
 }
 
@@ -99,8 +99,9 @@ app.get('/user', isAuthenticated, async (req, res) => {
     if (!req.session.user) {
       return res.status(401).send('Please log in to view this page.');
     }
+    const userInfo = await getUserByUsername(req.session.user.username);
   const posts = await getUserPosts(req.session.user.userId.toString());
-  res.render('user', { posts, user: req.session.user });
+  res.render('user', { posts, userInfo, user: req.session.user });
   }
   catch (error) {
     res.status(500).send('Error fetching posts');
