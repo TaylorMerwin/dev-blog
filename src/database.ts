@@ -66,7 +66,8 @@ export async function getPostsWithAuthor() {
     BlogPosts.title, 
     BlogPosts.post_description, 
     BlogPosts.created_at,
-    BlogPosts.image_path, 
+    BlogPosts.image_path,
+    BlogPosts.post_id, 
     Users.username AS author_name
   FROM 
     BlogPosts 
