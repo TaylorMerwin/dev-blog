@@ -43,7 +43,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
+import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -83,7 +83,7 @@ function isAuthenticated(req: express.Request, res: express.Response, next: expr
 
 app.get('/', async (req, res) => {
   try {
-    const posts = await getPosts(); // Fetch all posts
+    const posts = await getPostsWithAuthor(); // Fetch all posts
     res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
   } catch (error) {
     res.status(500).send('Error fetching posts');

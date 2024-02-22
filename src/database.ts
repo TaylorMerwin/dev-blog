@@ -59,6 +59,21 @@ export async function getPosts() {
   }
 }
 
+export async function getPostsWithAuthor() {
+  const [row] = await pool.query(`
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.post_description, 
+    BlogPosts.created_at,
+    BlogPosts.image_path, 
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id`);
+  return row;
+}
+
 export async function getUserPosts(authorID: string) {
   const [row] = await pool.query(`
   SELECT 
