@@ -8,6 +8,18 @@ const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const express_session_1 = __importDefault(require("express-session"));
+// const storage = new Storage({
+//   projectId: 'projectid',
+//   keyFilename: 'path-to-your-service-account-file.json',
+// },
+// );
+// const upload = multer({
+//   storage: new MulterGoogleCloudStorage({
+//     bucket: 'your-bucket-name',
+//     projectId: 'your-project-id',
+//     keyFilename: 'path-to-your-service-account-file.json',
+//   }),
+// });
 // Configure multer storage
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {

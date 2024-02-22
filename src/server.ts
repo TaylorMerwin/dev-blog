@@ -3,6 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
+//import { Storage } from '@google-cloud/storage';
+//import MulterGoogleCloudStorage from 'multer-google-storage';
 
 
 declare module 'express-session' {
@@ -10,6 +12,22 @@ declare module 'express-session' {
     user: {userId: number; username?: string; };
 }
 }
+
+
+
+// const storage = new Storage({
+//   projectId: 'projectid',
+//   keyFilename: 'path-to-your-service-account-file.json',
+// },
+// );
+
+// const upload = multer({
+//   storage: new MulterGoogleCloudStorage({
+//     bucket: 'your-bucket-name',
+//     projectId: 'your-project-id',
+//     keyFilename: 'path-to-your-service-account-file.json',
+//   }),
+// });
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -274,6 +292,7 @@ app.post('/registerAction/', async (req, res) => {
 
       // Hash the password
       const password_hash = await bcrypt.hash(password, 10);
+      
 
       await createUser(username, email, password_hash);
       console.log('createUser executed, sending response...');
