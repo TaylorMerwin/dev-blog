@@ -22,6 +22,7 @@ export async function getPost(postID: string) {
     BlogPosts.content, 
     BlogPosts.created_at, 
     BlogPosts.image_path,
+    BlogPosts.post_id,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -156,4 +157,9 @@ export async function createUser(username: string, email: string, passwordHash: 
   await pool.query(query, [username, email, passwordHash]);
 
   return { message: 'User created successfully' };
+}
+
+export async function deleteBlogPost(postID: number): Promise<void> {
+  const query = 'DELETE FROM BlogPosts WHERE post_id = ?';
+  await pool.query(query, [postID]);
 }

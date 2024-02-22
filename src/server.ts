@@ -43,7 +43,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
+import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername, deleteBlogPost } from './database';
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -159,12 +160,14 @@ app.get('/logout', (req, res) => {
 
 app.get('/view/:post_id', async (req, res) => {
   try {
-    const id = req.params.post_id; // Get the post id from the route parameter
-    const post = await getPost(id); // Fetch the post with the given id
-   // console.log("the post is " + post); // Log the post to the console to verify it was fetched
-   // res.json(post);      
+    const id = req.params.post_id;
+    const post = await getPost(id); // This should return a single post object
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
     res.render('view', { post, user: req.session.user } ); // Pass the post to the view.ejs template
   } catch (error) {
+    console.error(error);
     res.status(500).send('Error fetching post');
   }
 });
@@ -217,6 +220,23 @@ app.get('/blogPosts/', async (req, res) => {
   }
 });
 
+// Delete blog post by id route
+app.post('/deletePost/:post_id', async (req, res) => {
+  const postID = parseInt(req.params.post_id, 10);
+  if (isNaN(postID)) {
+    return res.status(400).send('Invalid post ID.');
+  }
+
+  try {
+    await deleteBlogPost(postID);
+    console.log(`Post with ID ${postID} deleted.`);
+    res.redirect('/');
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // POST route to create a new blog post
 app.post('/newPost/', upload.single('images'), async (req, res) => {
   console.log('Handling POST /newPost/ request...');
@@ -226,7 +246,7 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
   let imagePath = null;
 
   if (req.file) {
-      // Extract just the file name from the path
+      // Extract just the file name from the paths
       imagePath = path.basename(req.file.path);
   }
 
