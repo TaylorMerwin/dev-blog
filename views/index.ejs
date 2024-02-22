@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
   <title>Bloggy</title>
 </head>
 
@@ -14,9 +14,18 @@
     <h1>Bloggy</h1>
     <input type="search" placeholder="Search...">
     <nav>
-      <a href="/create">Create</a>
-      <a href="/login">Login/Signup</a>
-      <a href="#">About</a>
+      <% if (!user) { %>
+        <a href="/login">Login</a>
+        <a href="/register">Create Account</a>
+        <% } %>
+
+          <% if (user) { %>
+            <a href="/create">Create</a>
+            <a href="/user">User</a>
+            <a href="/logout">Logout</a>
+            <% } %>
+              <a href="https://github.com/TaylorMerwin/bloggy">About</a>
+
     </nav>
   </header>
   <div class="posts">
@@ -26,8 +35,7 @@
         <section class="featured">
           <div class="featured-image-container">
             <!-- If there's an image, show it, otherwise show a placeholder -->
-            <img src="./uploads/<%= post.image_path ? post.image_path : 'https://placehold.co/600x400/EEE/31343C' %>"
-              alt="Featured Blog Post Image">
+            <img src="/<%= post.image_path%>" alt="Featured Blog Post Image">
           </div>
           <div class="featured-text-container">
             <p>

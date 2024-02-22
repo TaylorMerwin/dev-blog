@@ -2,6 +2,32 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import bcrypt from 'bcrypt';
+import session from 'express-session';
+//import { Storage } from '@google-cloud/storage';
+//import MulterGoogleCloudStorage from 'multer-google-storage';
+
+
+declare module 'express-session' {
+  export interface SessionData {
+    user: {userId: number; username: string; };
+}
+}
+
+
+
+// const storage = new Storage({
+//   projectId: 'projectid',
+//   keyFilename: 'path-to-your-service-account-file.json',
+// },
+// );
+
+// const upload = multer({
+//   storage: new MulterGoogleCloudStorage({
+//     bucket: 'your-bucket-name',
+//     projectId: 'your-project-id',
+//     keyFilename: 'path-to-your-service-account-file.json',
+//   }),
+// });
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -17,34 +43,70 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { deleteBlogPost, getPost, getPosts, getUsers, getPostPreview, createBlogPost, createUser, getUserByUsername } from './database';
+import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername, deleteBlogPost } from './database';
 
 
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
+
 app.set("view engine", "ejs");
 
 
-// app.js
+
 app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
+app.use(express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(session({
+  secret: 'my_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  // Choose a suitable storege option? WTF is this?
+}))
+
+
+
+function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (req.session.user) {
+    next(); // The user is logged in, proceed to the route handler
+  } else {
+    // User is not logged in, send an error message or redirect to login
+    res.status(401).send('Please log in to view this page.');
+    // Or redirect to login page: res.redirect('/login');
+  }
+}
+
+
+
 
 
 // Page routes
 
 app.get('/', async (req, res) => {
   try {
-    const posts = await getPosts(); // Fetch all posts
-    res.render('index', { posts });  // Pass the posts to the template
+    const posts = await getPostsWithAuthor(); // Fetch all posts
+    res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
   } catch (error) {
     res.status(500).send('Error fetching posts');
   }
 });
 
-app.get('/create', (req, res) => {
+app.get('/create', isAuthenticated, (req, res) => {
   res.render('create');
+});
+
+app.get('/user', isAuthenticated, async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).send('Please log in to view this page.');
+    }
+    const userInfo = await getUserByUsername(req.session.user.username);
+  const posts = await getUserPosts(req.session.user.userId.toString());
+  res.render('user', { posts, userInfo, user: req.session.user });
+  }
+  catch (error) {
+    res.status(500).send('Error fetching posts');
+  }
 });
 
 app.get('/login', (req, res) => {
@@ -58,31 +120,42 @@ app.get('/register', (req, res) => {
 // Action routes
 
 app.post('/loginAction/', async (req, res) => {
-  const { username, password } = req.body; // Ensure these match your form input names
+  const { username, password } = req.body;
   if (!username || !password) {
-      // Handle missing username or password appropriately
-      return res.status(400).send("Username and password are required.");
+    return res.status(400).send("Username and password are required.");
   }
 
   try {
-      // Use the getUserByUsername function here
-      const user = await getUserByUsername(username);
-      if (user) {
-          // Use bcrypt.compare to compare the password with the hashed password
-          const match = await bcrypt.compare(password, user.password_hash);
-          if (match) {
-              // Proceed with login success logic
-              res.send('Logged in!');
-          } else {
-              res.send('Invalid password.');
-          }
+    const user = await getUserByUsername(username);
+    //console.log('User:', user);
+    if (user) {
+      const match = await bcrypt.compare(password, user.password_hash);
+      if (match) {
+        // Set user session
+        req.session.user = { userId: user.user_id, username: username };
+        res.redirect('/');
+
       } else {
-          res.send('User not found.');
+        res.send('Invalid password.');
       }
+    } else {
+      res.send('User not found.');
+    }
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Server error.');
+    console.error(err);
+    res.status(500).send('Server error.');
   }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Could not log out.");
+    }
+    console.log('Congratulations! You are the first person to log out');
+    res.redirect('/');
+  });
 });
 
 app.get('/view/:post_id', async (req, res) => {
@@ -92,7 +165,7 @@ app.get('/view/:post_id', async (req, res) => {
     if (!post) {
       return res.status(404).send('Post not found');
     }
-    res.render('view', { post }); // Ensure this is a single object
+    res.render('view', { post, user: req.session.user } ); // Pass the post to the view.ejs template
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching post');
@@ -184,12 +257,15 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
     }
 
   // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
-  const authorId = 1;
+  //const authorId = 1;
+
 
   try {
-      console.log('Calling createBlogPost...');
+    if (!req.session.user) {
+      return res.status(401).send('Please log in to create a post.');
+    }
+      const authorId = req.session.user.userId;
       await createBlogPost(title, postDescription, content, authorId, imagePath);
-      console.log('createBlogPost executed, sending response...');
       res.redirect('/');
   } catch (error) {
       console.error('Error in POST /newPost/ handler:', error);
@@ -237,6 +313,7 @@ app.post('/registerAction/', async (req, res) => {
 
       // Hash the password
       const password_hash = await bcrypt.hash(password, 10);
+      
 
       await createUser(username, email, password_hash);
       console.log('createUser executed, sending response...');
@@ -249,6 +326,6 @@ app.post('/registerAction/', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });

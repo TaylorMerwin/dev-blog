@@ -1,18 +1,19 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: "roboto", sans-serif;
-  font-weight: 500;
-  font-style: normal;
+
 }
 
 body {
-  background-color: #282a36;
+  background-color: #303030;
+  font-family: "pt-sans-pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Style for the header */
 .header {
-  background-color: #21222c;
+  background-color: #3d3d3d;
   /* Different background color */
   padding: 10px;
   display: flex;
@@ -22,13 +23,16 @@ body {
   color: white;
 }
 
-
-/* Style for the header name/logo */
+/* Style for the header h1 */
 .header h1 {
   margin: 0;
   /* Removes default margin */
-  font-size: 24px;
+  font-size: 2rem;
   /* Example font size */
+  font-family: "pt-serif-pro", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: white;
 }
 
 /* Style for the search bar */
@@ -40,7 +44,7 @@ body {
 }
 
 /* Style for navigation buttons */
-.header a {
+nav a {
   padding: 10px 15px;
   margin-left: 10px;
   background-color: white;
@@ -50,7 +54,7 @@ body {
   color: black;
 }
 
-.header a:hover {
+nav a:hover {
   background-color: #ccc;
   /* Color changes on hover */
 }
@@ -80,7 +84,6 @@ body {
   text-align: center;
   color: white;
   min-width: 40%;
-
   height: auto;
 }
 
@@ -92,7 +95,6 @@ body {
 
 .featured-image-container {
   width: 100%;
-
   padding-top: 56.25%;
   margin: 0;
   /* 9/16 = 0.5625 */
