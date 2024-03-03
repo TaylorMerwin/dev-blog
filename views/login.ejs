@@ -17,18 +17,17 @@
     <a href="/">
       <h1>Bloggy</h1>
     </a>
-    <input type="search" placeholder="Search...">
     <nav>
       <a href="/">Home</a>
       <a href="https://github.com/TaylorMerwin/bloggy">About</a>
     </nav>
   </header>
 
-  <section>
-    <h1>Login In</h1>
-    <form action="/loginAction/" method="post">
+<section class="login-container">
+    <h1>Login</h1>
+    <form action="/loginAction/" method="post" class="login-form">
       <input type="text" name="username" placeholder="Username" required>
       <input type="password" name="password" placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
-  </section>
+</section>
