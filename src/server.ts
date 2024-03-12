@@ -25,7 +25,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
+ import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername } from './database';
+//import { getPost } from './database';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -235,7 +236,7 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
 });
 
 
-// POST route to create a new user
+// // POST route to create a new user
 app.post('/registerAction/', async (req, res) => {
   console.log('Handling POST /newUser/ request...');
 
