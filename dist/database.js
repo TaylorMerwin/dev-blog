@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.createBlogPost = exports.getUserByUsername = exports.getUsers = exports.getUserPosts = exports.getPosts = exports.getPostPreview = exports.getPost = void 0;
+exports.deleteBlogPost = exports.createUser = exports.createBlogPost = exports.getUserByUsername = exports.getUsers = exports.getUserPosts = exports.getPostsWithAuthor = exports.getPosts = exports.getPostPreview = exports.getPost = void 0;
 const promise_1 = __importDefault(require("mysql2/promise"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -24,6 +24,7 @@ async function getPost(postID) {
     BlogPosts.content, 
     BlogPosts.created_at, 
     BlogPosts.image_path,
+    BlogPosts.post_id,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -62,6 +63,22 @@ async function getPosts() {
     }
 }
 exports.getPosts = getPosts;
+async function getPostsWithAuthor() {
+    const [row] = await pool.query(`
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.post_description, 
+    BlogPosts.created_at,
+    BlogPosts.image_path,
+    BlogPosts.post_id, 
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id`);
+    return row;
+}
+exports.getPostsWithAuthor = getPostsWithAuthor;
 async function getUserPosts(authorID) {
     const [row] = await pool.query(`
   SELECT 
@@ -125,3 +142,8 @@ async function createUser(username, email, passwordHash) {
     return { message: 'User created successfully' };
 }
 exports.createUser = createUser;
+async function deleteBlogPost(postID) {
+    const query = 'DELETE FROM BlogPosts WHERE post_id = ?';
+    await pool.query(query, [postID]);
+}
+exports.deleteBlogPost = deleteBlogPost;

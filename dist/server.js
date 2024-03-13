@@ -59,7 +59,7 @@ function isAuthenticated(req, res, next) {
 // Page routes
 app.get('/', async (req, res) => {
     try {
-        const posts = await (0, database_1.getPosts)(); // Fetch all posts
+        const posts = await (0, database_1.getPostsWithAuthor)(); // Fetch all posts
         res.render('index', { posts, user: req.session.user }); // Pass the posts to the template
     }
     catch (error) {
@@ -74,8 +74,9 @@ app.get('/user', isAuthenticated, async (req, res) => {
         if (!req.session.user) {
             return res.status(401).send('Please log in to view this page.');
         }
+        const userInfo = await (0, database_1.getUserByUsername)(req.session.user.username);
         const posts = await (0, database_1.getUserPosts)(req.session.user.userId.toString());
-        res.render('user', { posts, user: req.session.user });
+        res.render('user', { posts, userInfo, user: req.session.user });
     }
     catch (error) {
         res.status(500).send('Error fetching posts');
@@ -128,13 +129,15 @@ app.get('/logout', (req, res) => {
 });
 app.get('/view/:post_id', async (req, res) => {
     try {
-        const id = req.params.post_id; // Get the post id from the route parameter
-        const post = await (0, database_1.getPost)(id); // Fetch the post with the given id
-        // console.log("the post is " + post); // Log the post to the console to verify it was fetched
-        // res.json(post);      
-        res.render('view', { post, user: req.session.user }); // Pass the post to the view.ejs template
+        const id = req.params.post_id;
+        const post = await (0, database_1.getPost)(id); // This should return a single post object
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+        res.render('view', { post }); // Pass the post to the view.ejs template
     }
     catch (error) {
+        console.error(error);
         res.status(500).send('Error fetching post');
     }
 });
@@ -185,6 +188,22 @@ app.get('/blogPosts/', async (req, res) => {
         res.status(500).send('Error fetching posts');
     }
 });
+// Delete blog post by id route
+app.post('/deletePost/:post_id', async (req, res) => {
+    const postID = parseInt(req.params.post_id, 10);
+    if (isNaN(postID)) {
+        return res.status(400).send('Invalid post ID.');
+    }
+    try {
+        await (0, database_1.deleteBlogPost)(postID);
+        console.log(`Post with ID ${postID} deleted.`);
+        res.redirect('/');
+    }
+    catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 // POST route to create a new blog post
 app.post('/newPost/', upload.single('images'), async (req, res) => {
     console.log('Handling POST /newPost/ request...');
@@ -192,7 +211,7 @@ app.post('/newPost/', upload.single('images'), async (req, res) => {
     const { title, description: postDescription, content } = req.body;
     let imagePath = null;
     if (req.file) {
-        // Extract just the file name from the path
+        // Extract just the file name from the paths
         imagePath = path_1.default.basename(req.file.path);
     }
     //Check that all fields have data in them
