@@ -84,7 +84,7 @@ export async function getPosts() {
 }
 
 export async function getPostsWithAuthor() {
-  const [row] = await pool.query(`
+  const query = `
   SELECT 
     BlogPosts.title, 
     BlogPosts.post_description, 
@@ -95,8 +95,11 @@ export async function getPostsWithAuthor() {
   FROM 
     BlogPosts 
   INNER JOIN 
-    Users ON BlogPosts.author_id = Users.user_id`);
-  return row;
+    Users ON BlogPosts.author_id = Users.user_id`;
+
+  const result = await pool.query(query);
+  const rows = result.rows;
+  return rows || null;
 }
 
 export async function getUserPosts(authorID: string) {
