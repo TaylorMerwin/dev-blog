@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-
+  box-sizing: border-box;
 }
 
 body {
@@ -44,7 +44,7 @@ body {
 }
 
 /* Style for navigation buttons */
-.header a {
+nav a {
   padding: 10px 15px;
   margin-left: 10px;
   background-color: white;
@@ -54,7 +54,7 @@ body {
   color: black;
 }
 
-.header a:hover {
+nav a:hover {
   background-color: #ccc;
   /* Color changes on hover */
 }
@@ -63,10 +63,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0;
+  margin-top: 20px; 
   padding: 0;
-  min-width: 40%;
-  /* Match the min-width of the .featured class */
+  width: 80%; 
+  max-width: 800px;
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 @media screen and (max-width: 600px) {
@@ -83,8 +85,12 @@ body {
   border: 1px solid white;
   text-align: center;
   color: white;
-  min-width: 40%;
-  height: auto;
+  width: 100%; 
+  min-height: 300px; 
+  min-width: 300px;
+  margin-bottom: 20px; 
+  border-radius: 8px; 
+  overflow: hidden; 
 }
 
 @media screen and (max-width: 600px) {
@@ -159,4 +165,104 @@ body {
   text-align: left;
   max-width: 80%;
   min-width: 60%;
+}
+
+.login-container {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 25vh; 
+}
+
+.login-form, .registration-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px; 
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #424242; 
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+  margin: auto; 
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"],
+.registration-form input[type="text"],
+.registration-form input[type="email"], 
+.registration-form input[type="password"] {
+  background-color: #303030;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 20px; 
+  border: 1px solid #555; 
+  border-radius: 4px;
+}
+
+.login-form button, .registration-form button{
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: ivory; 
+  color: #555;
+  cursor: pointer;
+}
+
+.login-form button:hover, .registration-form button:hover{
+  background-color: rgb(217, 217, 206); 
+}
+
+.registration-container {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 30vh; 
+}
+
+.form-section {
+  color: #E0E0E0; 
+  background-color: #303030; 
+  padding: 0px;
+  border-radius: 8px;
+  margin: 20px; 
+  width: 80%;
+  max-width: 1000px;
+}
+
+.form-section h1 {
+  color: #FFFFFF; 
+}
+
+.form-section label {
+  color: #E0E0E0;
+}
+
+.form-section input[type="text"],
+.form-section input[type="file"],
+.form-section textarea {
+  background-color: #404040;
+  color: #FFFFFF; 
+  border: 1px solid #505050; 
+  padding: 10px;
+  margin-bottom: 15px; 
+  width: calc(100% - 22px); 
+}
+
+.form-section input[type="submit"] {
+  background-color: #606060; 
+  color: #FFFFFF;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+
+.form-section input[type="submit"]:hover {
+  background-color: #707070; 
 }

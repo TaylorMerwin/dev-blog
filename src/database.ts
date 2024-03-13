@@ -35,6 +35,7 @@ export async function getPost(postID: string) {
     BlogPosts.content, 
     BlogPosts.created_at, 
     BlogPosts.image_path,
+    BlogPosts.post_id,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -80,6 +81,22 @@ export async function getPosts() {
     const result = await pool.query(query);
     const rows = result.rows;
     return rows || null;
+}
+
+export async function getPostsWithAuthor() {
+  const [row] = await pool.query(`
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.post_description, 
+    BlogPosts.created_at,
+    BlogPosts.image_path,
+    BlogPosts.post_id, 
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id`);
+  return row;
 }
 
 export async function getUserPosts(authorID: string) {
@@ -157,4 +174,9 @@ export async function createUser(username: string, email: string, passwordHash: 
   VALUES ($1, $2, $3)`;
   await pool.query(query, [username, email, passwordHash]);
   return { message: 'User created successfully' };
+}
+
+export async function deleteBlogPost(postID: number): Promise<void> {
+  const query = 'DELETE FROM BlogPosts WHERE post_id = ?';
+  await pool.query(query, [postID]);
 }
