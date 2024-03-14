@@ -4,21 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBlogPost = exports.createUser = exports.createBlogPost = exports.getUserByUsername = exports.getUsers = exports.getUserPosts = exports.getPostsWithAuthor = exports.getPosts = exports.getPostPreview = exports.getPost = void 0;
-const promise_1 = __importDefault(require("mysql2/promise"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const pg_1 = require("pg");
 dotenv_1.default.config();
-const pool = promise_1.default.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    database: process.env.MYSQL_DATABASE,
-    password: process.env.MYSQL_PASSWORD,
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+const pool = new pg_1.Pool({
+    host: PGHOST,
+    database: PGDATABASE,
+    user: PGUSER,
+    password: PGPASSWORD,
+    port: 5432,
     ssl: {
-        rejectUnauthorized: true
-    }
+        rejectUnauthorized: true,
+    },
 });
 //Retrieval functions
 async function getPost(postID) {
-    const [row] = await pool.query(`
+    const query = `
   SELECT 
     BlogPosts.title, 
     BlogPosts.content, 
@@ -31,12 +33,14 @@ async function getPost(postID) {
   INNER JOIN 
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
-    BlogPosts.post_id = ?`, [postID]);
-    return row;
+    BlogPosts.post_id = $1`;
+    const result = await pool.query(query, [postID]);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getPost = getPost;
 async function getPostPreview(postID) {
-    const [row] = await pool.query(`
+    const query = `
   SELECT 
     BlogPosts.title, 
     BlogPosts.post_description, 
@@ -47,24 +51,22 @@ async function getPostPreview(postID) {
   INNER JOIN 
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
-    BlogPosts.post_id = ?`, [postID]);
-    return row;
+    BlogPosts.post_id = $1`;
+    const result = await pool.query(query, [postID]);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getPostPreview = getPostPreview;
 async function getPosts() {
-    try {
-        const [rows] = await pool.query(`
-    SELECT * FROM BlogPosts`);
-        return rows;
-    }
-    catch (error) {
-        console.error(error);
-        throw error; // re-throw the error so it can be handled by your error handling middleware
-    }
+    const query = `
+    SELECT * FROM BlogPosts`;
+    const result = await pool.query(query);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getPosts = getPosts;
 async function getPostsWithAuthor() {
-    const [row] = await pool.query(`
+    const query = `
   SELECT 
     BlogPosts.title, 
     BlogPosts.post_description, 
@@ -75,12 +77,14 @@ async function getPostsWithAuthor() {
   FROM 
     BlogPosts 
   INNER JOIN 
-    Users ON BlogPosts.author_id = Users.user_id`);
-    return row;
+    Users ON BlogPosts.author_id = Users.user_id`;
+    const result = await pool.query(query);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getPostsWithAuthor = getPostsWithAuthor;
 async function getUserPosts(authorID) {
-    const [row] = await pool.query(`
+    const query = `
   SELECT 
     BlogPosts.title, 
     BlogPosts.content, 
@@ -92,58 +96,54 @@ async function getUserPosts(authorID) {
   INNER JOIN 
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
-    BlogPosts.author_id = ?`, [authorID]);
-    return row;
+    BlogPosts.author_id = $1`;
+    const result = await pool.query(query, [authorID]);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getUserPosts = getUserPosts;
 async function getUsers() {
-    try {
-        const query = 'SELECT username, password_hash FROM Users';
-        const [users] = await pool.query(query);
-        return users;
-    }
-    catch (error) {
-        console.error('Error fetching users:', error);
-        throw error; // or handle it as needed
-    }
+    const query = 'SELECT username, password_hash FROM Users';
+    const result = await pool.query(query);
+    const rows = result.rows;
+    return rows || null;
 }
 exports.getUsers = getUsers;
 // Returns a user entry from the Users table by username
 async function getUserByUsername(username) {
-    const [rows] = await pool.query(`
+    const query = `
   SELECT * 
   FROM Users
-  WHERE username = ?`, [username]);
-    if (!rows.length) {
-        return null;
-    }
+  WHERE username = $1`;
+    const result = await pool.query(query, [username]);
+    const rows = result.rows;
     return rows[0];
 }
 exports.getUserByUsername = getUserByUsername;
 // Insert Functions
-// Create a new blog post 
+// Create new blog post
 async function createBlogPost(title, postDescription, content, authorId, imagePath) {
-    // Construct the SQL query with placeholders for the parameters
     const query = `
   INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
-  VALUES (?, ?, ?, ?, ?)`;
-    // Execute the query with the provided parameters.
-    // If imagePath is not provided, it defaults to NULL.
-    await pool.query(query, [title, postDescription, content, authorId, imagePath]);
-    // Optionally, you can return some data, like a confirmation message or the ID of the newly inserted post
-    return { message: 'Blog post created successfully' };
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING post_id`;
+    const result = await pool.query(query, [title, postDescription, content, authorId, imagePath]);
+    const postId = result.rows[0].post_id;
+    return { message: 'Blog post created successfully', postId };
 }
 exports.createBlogPost = createBlogPost;
+// Create new user
 async function createUser(username, email, passwordHash) {
     const query = `
   INSERT INTO Users (username, email, password_hash)
-  VALUES (?, ?, ?)`;
+  VALUES ($1, $2, $3)`;
     await pool.query(query, [username, email, passwordHash]);
     return { message: 'User created successfully' };
 }
 exports.createUser = createUser;
+// Delete Blog Post
 async function deleteBlogPost(postID) {
-    const query = 'DELETE FROM BlogPosts WHERE post_id = ?';
+    const query = 'DELETE FROM BlogPosts WHERE post_id = $1';
     await pool.query(query, [postID]);
 }
 exports.deleteBlogPost = deleteBlogPost;

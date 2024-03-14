@@ -1,18 +1,7 @@
-// import mysql from 'mysql2/promise';
-// import { RowDataPacket } from 'mysql2/promise';
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
 dotenv.config();
 
-// const pool = mysql.createPool({
-//   host: process.env.MYSQL_HOST,
-//   user: process.env.MYSQL_USER,
-//   database: process.env.MYSQL_DATABASE,
-//   password: process.env.MYSQL_PASSWORD,
-//   ssl: {
-//     rejectUnauthorized: true
-// }
-// });
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
 
 const pool = new Pool({
@@ -25,9 +14,14 @@ const pool = new Pool({
     rejectUnauthorized: true,
   },
 });
-//Retrieval functions
 
-// Testing out the new formatting for postgres
+interface User {
+  user_id: number;
+  username: string;
+  password_hash: string;
+}
+
+//Retrieval functions
 export async function getPost(postID: string) {
   const query = `
   SELECT 
@@ -43,13 +37,9 @@ export async function getPost(postID: string) {
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
     BlogPosts.post_id = $1`;
-
-  // Execute the query
   const result = await pool.query(query, [postID]);
-  // Access the rows from the result
   const rows = result.rows;
-  // Since you're expecting a single post, you can directly return the first row if it exists
-  return rows || null; // This returns the first row (your post) or null if no post was found
+  return rows || null;
 }
 
 export async function getPostPreview(postID: string) {
@@ -65,19 +55,14 @@ export async function getPostPreview(postID: string) {
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
     BlogPosts.post_id = $1`;
-
-  // Execute the query
   const result = await pool.query(query, [postID]);
-  // Access the rows from the result
   const rows = result.rows;
-  // Return the first row (your post preview) or null if no post was found
   return rows || null;
 }
 
 export async function getPosts() {
     const query = `
     SELECT * FROM BlogPosts`;
-
     const result = await pool.query(query);
     const rows = result.rows;
     return rows || null;
@@ -116,7 +101,6 @@ export async function getUserPosts(authorID: string) {
     Users ON BlogPosts.author_id = Users.user_id
   WHERE 
     BlogPosts.author_id = $1`;
-
   const result = await pool.query(query, [authorID]);
   const rows = result.rows;
   return rows || null;
@@ -127,12 +111,6 @@ export async function getUsers() {
       const result = await pool.query(query);
       const rows = result.rows;
       return rows || null;
-}
-
-interface User {
-  user_id: number;
-  username: string;
-  password_hash: string;
 }
 
 // Returns a user entry from the Users table by username
@@ -159,16 +137,12 @@ export async function createBlogPost(
   const query = `
   INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
   VALUES ($1, $2, $3, $4, $5)
-  RETURNING post_id`; // Assuming 'post_id' is the primary key column
+  RETURNING post_id`;
 
-  // Execute the query with the provided parameters and capture the returned value
   const result = await pool.query(query, [title, postDescription, content, authorId, imagePath]);
-  // Extract the post_id of the newly created row
   const postId = result.rows[0].post_id;
-  // Return the ID of the newly inserted post
   return { message: 'Blog post created successfully', postId };
 }
-
 
 // Create new user
 export async function createUser(username: string, email: string, passwordHash: string) {
@@ -179,7 +153,8 @@ export async function createUser(username: string, email: string, passwordHash: 
   return { message: 'User created successfully' };
 }
 
+// Delete Blog Post
 export async function deleteBlogPost(postID: number): Promise<void> {
-  const query = 'DELETE FROM BlogPosts WHERE post_id = ?';
+  const query = 'DELETE FROM BlogPosts WHERE post_id = $1';
   await pool.query(query, [postID]);
 }

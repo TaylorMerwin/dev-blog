@@ -8,18 +8,7 @@ const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const express_session_1 = __importDefault(require("express-session"));
-// const storage = new Storage({
-//   projectId: 'projectid',
-//   keyFilename: 'path-to-your-service-account-file.json',
-// },
-// );
-// const upload = multer({
-//   storage: new MulterGoogleCloudStorage({
-//     bucket: 'your-bucket-name',
-//     projectId: 'your-project-id',
-//     keyFilename: 'path-to-your-service-account-file.json',
-//   }),
-// });
+const database_1 = require("./database");
 // Configure multer storage
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
@@ -32,7 +21,6 @@ const storage = multer_1.default.diskStorage({
     }
 });
 const upload = (0, multer_1.default)({ storage: storage });
-const database_1 = require("./database");
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080;
 app.set("view engine", "ejs");
@@ -44,7 +32,6 @@ app.use((0, express_session_1.default)({
     secret: 'my_secret_key',
     resave: false,
     saveUninitialized: false,
-    // Choose a suitable storege option? WTF is this?
 }));
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
@@ -64,6 +51,20 @@ app.get('/', async (req, res) => {
     }
     catch (error) {
         res.status(500).send('Error fetching posts');
+    }
+});
+app.get('/view/:post_id', async (req, res) => {
+    try {
+        const id = req.params.post_id;
+        const post = await (0, database_1.getPost)(id); // This should return a single post object
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+        res.render('view', { post }); // Pass the post to the view.ejs template
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching post');
     }
 });
 app.get('/create', isAuthenticated, (req, res) => {
@@ -127,20 +128,82 @@ app.get('/logout', (req, res) => {
         res.redirect('/');
     });
 });
-app.get('/view/:post_id', async (req, res) => {
+// Delete blog post by id route
+app.post('/deletePost/:post_id', async (req, res) => {
+    const postID = parseInt(req.params.post_id, 10);
+    if (isNaN(postID)) {
+        return res.status(400).send('Invalid post ID.');
+    }
     try {
-        const id = req.params.post_id;
-        const post = await (0, database_1.getPost)(id); // This should return a single post object
-        if (!post) {
-            return res.status(404).send('Post not found');
-        }
-        res.render('view', { post }); // Pass the post to the view.ejs template
+        await (0, database_1.deleteBlogPost)(postID);
+        console.log(`Post with ID ${postID} deleted.`);
+        res.redirect('/');
     }
     catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching post');
+        console.error('Error deleting post:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
+// POST route to create a new blog post
+app.post('/newPost/', upload.single('images'), async (req, res) => {
+    console.log('Handling POST /newPost/ request...');
+    // Extract data from request body
+    const { title, description: postDescription, content } = req.body;
+    let imagePath = null;
+    if (req.file) {
+        // Extract just the file name from the paths
+        imagePath = path_1.default.basename(req.file.path);
+    }
+    if (!title || !postDescription || !content) {
+        return res.status(400).send('All fields are required');
+    }
+    try {
+        if (!req.session.user) {
+            return res.status(401).send('Please log in to create a post.');
+        }
+        const authorId = req.session.user.userId;
+        await (0, database_1.createBlogPost)(title, postDescription, content, authorId, imagePath);
+        res.redirect('/');
+    }
+    catch (error) {
+        console.error('Error in POST /newPost/ handler:', error);
+        res.status(500).send('Error creating post');
+    }
+});
+// // POST route to create a new user
+app.post('/registerAction/', async (req, res) => {
+    // Extract data from request body
+    const { username, email, password } = req.body;
+    try {
+        if (!username || !password) {
+            // Handle missing username or password appropriately
+            return res.status(400).send("Username and password are required.");
+        }
+        const user = await (0, database_1.getUserByUsername)(username);
+        // User already exists
+        if (user) {
+            res.send('Username already taken.');
+        }
+        else if (password.length < 8) {
+            res.send('Password must be at least 8 characters.');
+        }
+        // Ensure valid email format
+        else if (!email.includes('@')) {
+            res.send('Invalid email.');
+        }
+        // basic validation good, continue
+        else {
+            // Hash the password
+            const password_hash = await bcrypt_1.default.hash(password, 10);
+            await (0, database_1.createUser)(username, email, password_hash);
+            res.redirect('/login');
+        }
+    }
+    catch (error) {
+        res.status(500).send(`Error creating user, ${error}`);
+    }
+});
+// Not being used in app but helpful for testing
 // get a post by id
 app.get('/blogPost/:post_id', async (req, res) => {
     try {
@@ -186,91 +249,6 @@ app.get('/blogPosts/', async (req, res) => {
     catch (error) {
         console.error('Error in GET /blogPosts/ handler:', error);
         res.status(500).send('Error fetching posts');
-    }
-});
-// Delete blog post by id route
-app.post('/deletePost/:post_id', async (req, res) => {
-    const postID = parseInt(req.params.post_id, 10);
-    if (isNaN(postID)) {
-        return res.status(400).send('Invalid post ID.');
-    }
-    try {
-        await (0, database_1.deleteBlogPost)(postID);
-        console.log(`Post with ID ${postID} deleted.`);
-        res.redirect('/');
-    }
-    catch (error) {
-        console.error('Error deleting post:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-// POST route to create a new blog post
-app.post('/newPost/', upload.single('images'), async (req, res) => {
-    console.log('Handling POST /newPost/ request...');
-    // Extract data from request body
-    const { title, description: postDescription, content } = req.body;
-    let imagePath = null;
-    if (req.file) {
-        // Extract just the file name from the paths
-        imagePath = path_1.default.basename(req.file.path);
-    }
-    //Check that all fields have data in them
-    // Check if all fields have data
-    if (!title || !postDescription || !content) {
-        return res.status(400).send('All fields are required');
-    }
-    // Hardcode the authorId as 1 for now (Until we implement authentication/user login)
-    //const authorId = 1;
-    try {
-        if (!req.session.user) {
-            return res.status(401).send('Please log in to create a post.');
-        }
-        const authorId = req.session.user.userId;
-        await (0, database_1.createBlogPost)(title, postDescription, content, authorId, imagePath);
-        res.redirect('/');
-    }
-    catch (error) {
-        console.error('Error in POST /newPost/ handler:', error);
-        res.status(500).send('Error creating post');
-    }
-});
-// POST route to create a new user
-app.post('/registerAction/', async (req, res) => {
-    console.log('Handling POST /newUser/ request...');
-    // Extract data from request body
-    const { username, email, password } = req.body;
-    try {
-        if (!username || !password) {
-            // Handle missing username or password appropriately
-            return res.status(400).send("Username and password are required.");
-        }
-        // check if user already exists
-        // Use the getUserByUsername function here
-        const user = await (0, database_1.getUserByUsername)(username);
-        // User already exists
-        if (user) {
-            res.send('Username already taken.');
-        }
-        else if (password.length < 8) {
-            res.send('Password must be at least 8 characters.');
-        }
-        // Ensure valid email format
-        else if (!email.includes('@')) {
-            res.send('Invalid email.');
-        }
-        // basic validation good, continue
-        else {
-            console.log('Hashing PW...');
-            // Hash the password
-            const password_hash = await bcrypt_1.default.hash(password, 10);
-            await (0, database_1.createUser)(username, email, password_hash);
-            console.log('createUser executed, sending response...');
-            res.redirect('/login');
-        }
-    }
-    catch (error) {
-        console.error('Error in POST /newUser/ handler:', error);
-        res.status(500).send('Error creating user');
     }
 });
 app.listen(PORT, () => {
