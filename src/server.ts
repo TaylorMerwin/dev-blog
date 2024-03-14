@@ -1,10 +1,10 @@
 import express from 'express';
-import multer from 'multer';
-import path from 'path';
+import Multer from 'multer';
+import * as gcs from '@google-cloud/storage';
+//import path from 'path';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createBlogPost, createUser, getUserByUsername, deleteBlogPost } from './database';
-
+import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createUser, createBlogPost, getUserByUsername, deleteBlogPost } from './database';
 
 declare module 'express-session' {
   export interface SessionData {
@@ -12,21 +12,52 @@ declare module 'express-session' {
   }
 }
 
+// OLD
 // Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        // Generate a unique file name with the original extension
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads/');
+//     },
+//     filename: (req, file, cb) => {
+//         // Generate a unique file name with the original extension
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//     }
+// });
+//const upload = multer({ storage: storage });
 
-const upload = multer({ storage: storage });
+
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+
+const storage = new gcs.Storage({
+  projectId: process.env.GCLOUD_PROJECT_ID || 'bloggy-414621'
+});
+const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-414621.appspot.com';
+
+
+//A bucket is a container for objects (files).
+const bucket = storage.bucket(bucketname);
+
+// async function authenticateImplicitWithAdc() {
+//   // This snippet demonstrates how to list buckets.
+//   // NOTE: Replace the client created below with the client required for your application.
+//   // Note that the credentials are not specified when constructing the client.
+//   // The client library finds your credentials using ADC.
+
+//   const [buckets] = await storage.getBuckets();
+//   console.log('Buckets:');
+
+//   for (const bucket of buckets) {
+//     console.log(`- ${bucket.name}`);
+//   }
+
+//   console.log('Listed all storage buckets.');
+// }
+
+// authenticateImplicitWithAdc();
+
 
 app.set("view engine", "ejs");
 app.use(express.static('public'));
@@ -38,6 +69,22 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }))
+
+const multer = Multer({
+  storage: Multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // No larger than 10mb
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      // Accept the file
+      cb(null, true);
+    } else {
+      // Reject the file
+      cb(null, false);
+    }
+  }
+});
 
 function isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
   if (req.session.user) {
@@ -156,29 +203,44 @@ app.post('/deletePost/:post_id', async (req, res) => {
   }
 });
 
-// POST route to create a new blog post
-app.post('/newPost/', upload.single('images'), async (req, res) => {
-  console.log('Handling POST /newPost/ request...');
+//POST route to create a new blog post
+app.post('/newPost/', multer.single('images'), async (req, res, next) => {
 
   // Extract data from request body
   const { title, description: postDescription, content } = req.body;
-  let imagePath = null;
+  let fileName = '';
 
   if (req.file) {
       // Extract just the file name from the paths
-      imagePath = path.basename(req.file.path);
+      const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      fileName = `uploads/${uniquePrefix}-${req.file.originalname}`;
+      const blob = bucket.file(fileName);
+      const blobStream = blob.createWriteStream();
+    
+      blobStream.on('error', (err: Error) => {
+        next(err);
+      });
+      
+    
+      blobStream.on('finish', () => {
+        // The public URL can be used to directly access the file via HTTP.
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        res.status(200).send(publicUrl);
+      });
+    
+      blobStream.end(req.file.buffer);
   }
 
-    if (!title || !postDescription || !content) {
+  if (!title || !postDescription || !content) {
       return res.status(400).send('All fields are required');
-    }
+  }
 
   try {
     if (!req.session.user) {
       return res.status(401).send('Please log in to create a post.');
     }
       const authorId = req.session.user.userId;
-      await createBlogPost(title, postDescription, content, authorId, imagePath);
+      await createBlogPost(title, postDescription, content, authorId, fileName);
       res.redirect('/');
   } catch (error) {
       console.error('Error in POST /newPost/ handler:', error);
@@ -218,6 +280,33 @@ app.post('/registerAction/', async (req, res) => {
       res.status(500).send(`Error creating user, ${error}`);
   }
 });
+
+// Process the file upload and upload to Google Cloud Storage.
+app.post('/upload', multer.single('file'), (req, res, next) => {
+  if (!req.file) {
+    res.status(400).send('No file uploaded.');
+    return;
+  }
+
+  // Create a new blob in the bucket and upload the file data.
+  const newFileName = `uploads/${req.file.originalname}`;
+  const blob = bucket.file(newFileName);
+  const blobStream = blob.createWriteStream();
+
+  blobStream.on('error', (err: Error) => {
+    next(err);
+  });
+  
+  blobStream.on('finish', () => {
+    // The public URL can be used to directly access the file via HTTP.
+    blob.makePublic().then(() => {
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      res.status(200).send(publicUrl);
+    });
+  });
+    blobStream.end(req.file.buffer);
+});
+
 
 // Not being used in app but helpful for testing
 
