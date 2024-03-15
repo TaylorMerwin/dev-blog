@@ -34,7 +34,7 @@ const PORT = process.env.PORT || 8080;
 const storage = new gcs.Storage({
   projectId: process.env.GCLOUD_PROJECT_ID || 'bloggy-414621'
 });
-const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-414621.appspot.com';
+const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-images';
 
 
 //A bucket is a container for objects (files).
