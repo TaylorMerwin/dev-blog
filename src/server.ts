@@ -204,47 +204,55 @@ app.post('/deletePost/:post_id', async (req, res) => {
 });
 
 //POST route to create a new blog post
-app.post('/newPost/', multer.single('images'), async (req, res, next) => {
+app.post('/newPost/', multer.single('images'), async (req, res) => {
 
   // Extract data from request body
   const { title, description: postDescription, content } = req.body;
   let fileName = '';
-
-  if (req.file) {
-      // Extract just the file name from the paths
-      const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      fileName = `uploads/${uniquePrefix}-${req.file.originalname}`;
-      const blob = bucket.file(fileName);
-      const blobStream = blob.createWriteStream();
-    
-      blobStream.on('error', (err: Error) => {
-        next(err);
-      });
-      
-    
-      blobStream.on('finish', () => {
-        // The public URL can be used to directly access the file via HTTP.
-        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-        res.status(200).send(publicUrl);
-      });
-    
-      blobStream.end(req.file.buffer);
-  }
+  //let publicUrl = '';
 
   if (!title || !postDescription || !content) {
-      return res.status(400).send('All fields are required');
-  }
+    return res.status(400).send('All fields are required');
+}
 
-  try {
-    if (!req.session.user) {
-      return res.status(401).send('Please log in to create a post.');
-    }
-      const authorId = req.session.user.userId;
-      await createBlogPost(title, postDescription, content, authorId, fileName);
-      res.redirect('/');
-  } catch (error) {
+if (!req.session.user) {
+  return res.status(401).send('Please log in to create a post.');
+}
+
+try {
+  if (req.file) {
+    // Extract just the file name from the paths
+    const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    fileName = `uploads/${uniquePrefix}-${req.file.originalname}`;
+
+    const blob = bucket.file(fileName);
+    const blobStream = blob.createWriteStream();
+
+
+    await new Promise<void>((resolve, reject) => {
+      blobStream.on('error', reject);
+      blobStream.on('finish', () => {
+        //const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        resolve();
+      });
+      blobStream.end(req.file?.buffer);
+    });
+  }
+  
+    
+    const authorId = req.session.user.userId;
+    await createBlogPost(title, postDescription, content, authorId, fileName);
+
+    //Finally, all operations successfuly complete. redirect to the home page
+    res.redirect('/');
+  
+} catch (error) {
       console.error('Error in POST /newPost/ handler:', error);
-      res.status(500).send('Error creating post');
+
+      if (!res.headersSent) {
+        res.status(500).send('Error creating post');
+      }
+
   }
 });
 
