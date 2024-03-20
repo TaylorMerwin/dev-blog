@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
+import { User, Post, PostPreview } from './types';
 dotenv.config();
 
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
@@ -14,12 +15,6 @@ const pool = new Pool({
     rejectUnauthorized: true,
   },
 });
-
-interface User {
-  user_id: number;
-  username: string;
-  password_hash: string;
-}
 
 //Retrieval functions
 export async function getPost(postID: string) {
@@ -39,7 +34,7 @@ export async function getPost(postID: string) {
     BlogPosts.post_id = $1`;
   const result = await pool.query(query, [postID]);
   const rows = result.rows;
-  return rows || null;
+  return rows[0] as Post;
 }
 
 export async function getPostPreview(postID: string) {
@@ -84,7 +79,35 @@ export async function getPostsWithAuthor() {
 
   const result = await pool.query(query);
   const rows = result.rows;
-  return rows || null;
+  return rows as PostPreview[] || null;
+}
+
+export async function getPostPreviews(lastPostId?: number, limit = 10) {
+
+  // Only apply the WHERE clause if lastPostId is provided and greater than 0
+  const whereClause = lastPostId && lastPostId > 0 ? `WHERE post_id < $1` : '';
+  const query = `
+  SELECT 
+    BlogPosts.title, 
+    BlogPosts.post_description, 
+    BlogPosts.created_at,
+    BlogPosts.image_path,
+    Users.username AS author_name
+  FROM 
+    BlogPosts 
+  INNER JOIN 
+    Users ON BlogPosts.author_id = Users.user_id
+    ${whereClause}
+    ORDER BY
+    BlogPosts.post_id ASC
+    LIMIT $2`;
+
+  const params = whereClause ? [lastPostId, limit] : [limit];
+  const result = await pool.query(query, params);
+  console.log("getPostPreviews called");
+  console.log(result.rows);
+
+  return result.rows as PostPreview[];
 }
 
 export async function getUserPosts(authorID: string) {
@@ -119,7 +142,6 @@ export async function getUserByUsername(username: string) {
   SELECT * 
   FROM Users
   WHERE username = $1`;
-
   const result = await pool.query(query, [username]);
   const rows = result.rows;
   return rows[0] as User;
@@ -144,7 +166,13 @@ export async function createBlogPost(
   return { message: 'Blog post created successfully', postId };
 }
 
-// Create new user
+/**
+ * Insert a new user into the Users table
+ * @param username 
+ * @param email 
+ * @param passwordHash 
+ * @returns confirmation message
+ */
 export async function createUser(username: string, email: string, passwordHash: string) {
   const query = `
   INSERT INTO Users (username, email, password_hash)

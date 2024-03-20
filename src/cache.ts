@@ -16,15 +16,16 @@ const postCache: PostCache = {
 // Assuming getPostsWithAuthor returns a Promise of Post[]
 export async function updateCache(): Promise<void> {
   try {
-    const recentPosts = await getPostPreviews(postCache.cacheLimit, 0);
+    const recentPosts = await getPostPreviews(postCache.cacheLimit, 10);
     postCache.posts = recentPosts;
     postCache.lastUpdated = new Date();
+    console.log('Post cache updated');
   } catch (error) {
     console.error('Failed to update post cache:', error);
   }
 }
 
-export function getPosts(): PostPreview[] {
+export function getCachedPosts(): PostPreview[] {
   return postCache.posts;
 }
 

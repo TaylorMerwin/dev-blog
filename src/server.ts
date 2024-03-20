@@ -3,7 +3,8 @@ import Multer from 'multer';
 import * as gcs from '@google-cloud/storage';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createUser, createBlogPost, getUserByUsername, deleteBlogPost } from './database';
+import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createUser, createBlogPost, getUserByUsername, deleteBlogPost } from './database';
+import { getCachedPosts, isCacheStale, updateCache } from './cache';
 
 declare module 'express-session' {
   export interface SessionData {
@@ -13,6 +14,14 @@ declare module 'express-session' {
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// At server startup, update cache
+// Update the cache on server startup
+updateCache().then(() => {
+  console.log('Cache initialized.');
+  //print the cached posts for debugging
+  console.log(getCachedPosts());
+});
 
 
 const storage = new gcs.Storage({
@@ -63,12 +72,24 @@ function isAuthenticated(req: express.Request, res: express.Response, next: expr
 
 // Page routes
 app.get('/', async (req, res) => {
-  try {
-    const posts = await getPostsWithAuthor(); // Fetch all posts
-    res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
-  } catch (error) {
-    res.status(500).send('Error fetching posts');
+
+  let posts = [];
+  // check if the cache is too old
+  if (isCacheStale()) {
+    await updateCache();
   }
+  posts = getCachedPosts();
+
+
+  res.render('index', { posts, user: req.session.user });
+
+  // implementation before caching
+  // try {
+  //   const posts = await getPostsWithAuthor(); // Fetch all posts
+  //   res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
+  // } catch (error) {
+  //   res.status(500).send('Error fetching posts');
+  // }
 });
 
 app.get('/view/:post_id', async (req, res) => {
