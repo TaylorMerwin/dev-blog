@@ -17,11 +17,7 @@ const PORT = process.env.PORT || 8080;
 
 // At server startup, update cache
 // Update the cache on server startup
-updateCache().then(() => {
-  console.log('Cache initialized.');
-  //print the cached posts for debugging
-  console.log(getCachedPosts());
-});
+updateCache();
 
 
 const storage = new gcs.Storage({

@@ -33,8 +33,7 @@ export async function getPost(postID: string) {
   WHERE 
     BlogPosts.post_id = $1`;
   const result = await pool.query(query, [postID]);
-  const rows = result.rows;
-  return rows[0] as Post;
+  return result.rows as Post[];
 }
 
 export async function getPostPreview(postID: string) {
@@ -92,6 +91,7 @@ export async function getPostPreviews(lastPostId?: number, limit = 10) {
     BlogPosts.post_description, 
     BlogPosts.created_at,
     BlogPosts.image_path,
+    BlogPosts.post_id,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -104,9 +104,6 @@ export async function getPostPreviews(lastPostId?: number, limit = 10) {
 
   const params = whereClause ? [lastPostId, limit] : [limit];
   const result = await pool.query(query, params);
-  console.log("getPostPreviews called");
-  console.log(result.rows);
-
   return result.rows as PostPreview[];
 }
 

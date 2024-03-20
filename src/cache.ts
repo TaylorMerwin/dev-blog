@@ -19,7 +19,6 @@ export async function updateCache(): Promise<void> {
     const recentPosts = await getPostPreviews(postCache.cacheLimit, 10);
     postCache.posts = recentPosts;
     postCache.lastUpdated = new Date();
-    console.log('Post cache updated');
   } catch (error) {
     console.error('Failed to update post cache:', error);
   }
