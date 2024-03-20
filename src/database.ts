@@ -36,51 +36,6 @@ export async function getPost(postID: string) {
   return result.rows as Post[];
 }
 
-export async function getPostPreview(postID: string) {
-  const query = `
-  SELECT 
-    BlogPosts.title, 
-    BlogPosts.post_description, 
-    BlogPosts.created_at, 
-    Users.username AS author_name
-  FROM 
-    BlogPosts 
-  INNER JOIN 
-    Users ON BlogPosts.author_id = Users.user_id
-  WHERE 
-    BlogPosts.post_id = $1`;
-  const result = await pool.query(query, [postID]);
-  const rows = result.rows;
-  return rows || null;
-}
-
-export async function getPosts() {
-    const query = `
-    SELECT * FROM BlogPosts`;
-    const result = await pool.query(query);
-    const rows = result.rows;
-    return rows || null;
-}
-
-export async function getPostsWithAuthor() {
-  const query = `
-  SELECT 
-    BlogPosts.title, 
-    BlogPosts.post_description, 
-    BlogPosts.created_at,
-    BlogPosts.image_path,
-    BlogPosts.post_id, 
-    Users.username AS author_name
-  FROM 
-    BlogPosts 
-  INNER JOIN 
-    Users ON BlogPosts.author_id = Users.user_id`;
-
-  const result = await pool.query(query);
-  const rows = result.rows;
-  return rows as PostPreview[] || null;
-}
-
 export async function getPostPreviews(lastPostId?: number, limit = 10) {
 
   // Only apply the WHERE clause if lastPostId is provided and greater than 0
@@ -124,13 +79,6 @@ export async function getUserPosts(authorID: string) {
   const result = await pool.query(query, [authorID]);
   const rows = result.rows;
   return rows || null;
-}
-
-export async function getUsers() {
-  const query = 'SELECT username, password_hash FROM Users';
-      const result = await pool.query(query);
-      const rows = result.rows;
-      return rows || null;
 }
 
 // Returns a user entry from the Users table by username

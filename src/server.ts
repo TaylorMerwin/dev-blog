@@ -3,7 +3,7 @@ import Multer from 'multer';
 import * as gcs from '@google-cloud/storage';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { getPost, getPosts, getUsers, getPostPreview, getUserPosts, createUser, createBlogPost, getUserByUsername, deleteBlogPost } from './database';
+import { getPost, getUserPosts, getUserByUsername, createUser, createBlogPost, deleteBlogPost } from './database';
 import { getCachedPosts, isCacheStale, updateCache } from './cache';
 
 declare module 'express-session' {
@@ -15,7 +15,6 @@ declare module 'express-session' {
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// At server startup, update cache
 // Update the cache on server startup
 updateCache();
 
@@ -24,8 +23,6 @@ const storage = new gcs.Storage({
   projectId: process.env.GCLOUD_PROJECT_ID || 'bloggy-414621'
 });
 const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-images';
-
-
 //A bucket is a container for objects (files).
 const bucket = storage.bucket(bucketname);
 
@@ -295,56 +292,6 @@ app.post('/upload', multer.single('file'), (req, res, next) => {
     });
   });
     blobStream.end(req.file.buffer);
-});
-
-
-// Not being used in app but helpful for testing
-
-// get a post by id
-app.get('/blogPost/:post_id', async (req, res) => {
-  try {
-    const id = req.params.post_id;
-    const post = await getPost(id);
-    res.json(post); // Use res.json to send JSON response
-  } catch (error) {
-    res.status(500).send('Error fetching post');
-  }
-});
-
-// get all users (usernames and passwords)
-app.get('/getUsers/', async (req, res) => {
-  try {
-    const users = await getUsers(); // Fetch all users
-    res.json(users); // Send the users as JSON response
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send('Error fetching users');
-  }
-});
-
-// get a post preview by id
-app.get('/postPreview/:post_id', async (req, res) => {
-  try {
-    const id = req.params.post_id;
-    const post = await getPostPreview(id);
-    res.json(post); // Use res.json to send JSON response
-  } catch (error) {
-    res.status(500).send('Error fetching post');
-  }
-});
-
-// get all posts
-app.get('/blogPosts/', async (req, res) => {
-  console.log('Handling GET /blogPosts/ request...');
-  try {
-    console.log('Calling getPosts...');
-    const posts = await getPosts();
-    console.log('getPosts returned, sending response...');
-    res.send(posts);
-  } catch (error) {
-    console.error('Error in GET /blogPosts/ handler:', error);
-    res.status(500).send('Error fetching posts');
-  }
 });
 
 app.listen(PORT, () => {
