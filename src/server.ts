@@ -1,7 +1,6 @@
 import express from 'express';
 import Multer from 'multer';
 import * as gcs from '@google-cloud/storage';
-//import path from 'path';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
 import { getPost, getPosts, getPostsWithAuthor, getUsers, getPostPreview, getUserPosts, createUser, createBlogPost, getUserByUsername, deleteBlogPost } from './database';
@@ -11,21 +10,6 @@ declare module 'express-session' {
     user: {userId: number; username: string; };
   }
 }
-
-// OLD
-// Configure multer storage
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         // Generate a unique file name with the original extension
-//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-//     }
-// });
-//const upload = multer({ storage: storage });
-
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -39,25 +23,6 @@ const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-images';
 
 //A bucket is a container for objects (files).
 const bucket = storage.bucket(bucketname);
-
-// async function authenticateImplicitWithAdc() {
-//   // This snippet demonstrates how to list buckets.
-//   // NOTE: Replace the client created below with the client required for your application.
-//   // Note that the credentials are not specified when constructing the client.
-//   // The client library finds your credentials using ADC.
-
-//   const [buckets] = await storage.getBuckets();
-//   console.log('Buckets:');
-
-//   for (const bucket of buckets) {
-//     console.log(`- ${bucket.name}`);
-//   }
-
-//   console.log('Listed all storage buckets.');
-// }
-
-// authenticateImplicitWithAdc();
-
 
 app.set("view engine", "ejs");
 app.use(express.static('public'));
