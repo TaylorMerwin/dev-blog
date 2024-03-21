@@ -175,6 +175,8 @@ app.post('/deletePost/:post_id', async (req, res) => {
   try {
     await deleteBlogPost(postID);
     console.log(`Post with ID ${postID} deleted.`);
+    // Update the cache on CRUD operations
+    await updateCache();
     res.redirect('/');
   } catch (error) {
     console.error('Error deleting post:', error);
@@ -222,6 +224,8 @@ try {
     const authorId = req.session.user.userId;
     await createBlogPost(title, postDescription, content, authorId, fileName);
 
+    // Update the cache on CRUD operations
+    await updateCache();
     //Finally, all operations successfuly complete. redirect to the home page
     res.redirect('/');
   
