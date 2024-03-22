@@ -25,12 +25,14 @@
   <section class="form-section">
     <h1>Edit Blog Post</h1>
     <% post.slice().forEach(function(post) { %>
-      <form enctype="multipart/form-data" action="/editPost/" method="POST">
+      <form action="/editPost/" method="POST">
         <input type="hidden" name="postId" value="<%= post.post_id %>">
+        <input type="hidden" name="authorId" value="<%= post.author_id %>">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" value="<%= post.title %>" required /><br /><br />
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description" /><br /><br />
+        <input type="text" id="description" name="description" value="<%= post.post_description %>"
+          required /><br /><br />
         <label for="content">Content:</label><br />
         <textarea id="content" name="content" required><%= post.content %></textarea>
         <script>

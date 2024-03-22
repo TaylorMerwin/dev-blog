@@ -242,7 +242,7 @@ try {
 app.post('/editPost/', async (req, res) => {
 
     // Extract data from request body
-    const { title, description: postDescription, content, postId } = req.body;
+    const { title, description: postDescription, content, postId, authorId } = req.body;
   
     if (!title || !postDescription || !content || !postId) {
       return res.status(400).send('All fields are required');
@@ -252,7 +252,9 @@ app.post('/editPost/', async (req, res) => {
     return res.status(401).send('Please log in to edit a post.');
   }
 
-  if (req.body.author_id !== req.session.user.userId) {
+  if (Number(authorId) !== req.session.user.userId) {
+    console.log('User ID:', req.session.user.userId);
+    console.log('Author ID:', authorId);
     return res.status(403).send('You are not authorized to edit this post.');
   }
 
@@ -262,7 +264,7 @@ app.post('/editPost/', async (req, res) => {
     // Update the cache on CRUD operations
     if (updateResult && updateResult.postId) {
     await updateCache();
-    res.redirect(`/view/${postId}`);
+    res.redirect(`/`);
   } else {
     res.status(404).send('Something went wrong');
   }
