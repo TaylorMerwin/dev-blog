@@ -252,7 +252,7 @@ app.post('/editPost/', async (req, res) => {
     return res.status(401).send('Please log in to edit a post.');
   }
 
-  if (Number(authorId) !== req.session.user.userId) {
+  if (authorId != req.session.user.userId) {
     console.log('User ID:', req.session.user.userId);
     console.log('Author ID:', authorId);
     return res.status(403).send('You are not authorized to edit this post.');

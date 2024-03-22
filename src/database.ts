@@ -136,8 +136,8 @@ export async function updateBlogPost(
 ) {
   const query = `
   UPDATE BlogPosts
-  SET title = $1, post_description = $2, content = $3
-  WHERE post_id = $5
+  SET title = $2, post_description = $3, content = $4
+  WHERE post_id = $1
   RETURNING post_id`;
 
   try {
