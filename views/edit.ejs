@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <title>Create new blog</title>
+
+</head>
+
+<body>
+  <header class="header">
+    <h1>Bloggy</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+  <section class="form-section">
+    <h1>Edit Blog Post</h1>
+    <% post.slice().forEach(function(post) { %>
+      <form enctype="multipart/form-data" action="/editPost/" method="POST">
+        <input type="hidden" name="postId" value="<%= post.post_id %>">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="<%= post.title %>" required /><br /><br />
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" /><br /><br />
+        <label for="content">Content:</label><br />
+        <textarea id="content" name="content" required><%= post.content %></textarea>
+        <script>
+          var easyMDE = new EasyMDE({
+            element: document.getElementById('content')
+          });
+        </script>
+        <br />
+        <div class="g-recaptcha" data-sitekey="6LeAepopAAAAADJceMdR6hc775TYyB6TGQgr1CGd"></div>
+        <br />
+        <input id="submitButton" type="submit" value="Submit" />
+      </form>
+  </section>
+  <% }); %>
+</body>
+
+</html>

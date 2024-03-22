@@ -53,11 +53,14 @@
         <button type="submit" id="deleteButton">Delete Post</button>
       </form>
 
-      <script>
-        function confirmDelete() {
-          return confirm('Are you sure you want to delete this post?');
-        }
-      </script>
+      <form action="/edit/<%= post.post_id %>" method="get">
+        <button type="submit" id="editButton">Edit Post</button>
+
+        <script>
+          function confirmDelete() {
+            return confirm('Are you sure you want to delete this post?');
+          }
+        </script>
     </main>
     <% }); %>
 

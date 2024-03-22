@@ -25,6 +25,7 @@ export async function getPost(postID: string) {
     BlogPosts.created_at, 
     BlogPosts.image_path,
     BlogPosts.post_id,
+    BlogPosts.author_id,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -124,6 +125,33 @@ export async function createUser(username: string, email: string, passwordHash: 
   VALUES ($1, $2, $3)`;
   await pool.query(query, [username, email, passwordHash]);
   return { message: 'User created successfully' };
+}
+
+// Update an existing blog post
+export async function updateBlogPost(
+  postId: number,
+  title: string, 
+  postDescription: string, 
+  content: string
+) {
+  const query = `
+  UPDATE BlogPosts
+  SET title = $1, post_description = $2, content = $3
+  WHERE post_id = $5
+  RETURNING post_id`;
+
+  try {
+    const result = await pool.query(query, [postId, title, postDescription, content]);
+    if (result.rows.length > 0) {
+      return { message: 'Blog post updated successfully', postId: result.rows[0].post_id };
+    }
+    else {
+      return { message: 'Blog post not found / no changes made', postId: null };
+    }
+  } catch (error){
+    console.error('Error updating post:', error);
+    throw error;
+  }
 }
 
 // Delete Blog Post

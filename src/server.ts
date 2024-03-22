@@ -3,7 +3,7 @@ import Multer from 'multer';
 import * as gcs from '@google-cloud/storage';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { getPost, getUserPosts, getUserByUsername, createUser, createBlogPost, deleteBlogPost } from './database';
+import { getPost, getUserPosts, getUserByUsername, createUser, createBlogPost, updateBlogPost, deleteBlogPost } from './database';
 import { getCachedPosts, isCacheStale, updateCache } from './cache';
 
 declare module 'express-session' {
@@ -72,17 +72,7 @@ app.get('/', async (req, res) => {
     await updateCache();
   }
   posts = getCachedPosts();
-
-
   res.render('index', { posts, user: req.session.user });
-
-  // implementation before caching
-  // try {
-  //   const posts = await getPostsWithAuthor(); // Fetch all posts
-  //   res.render('index', { posts, user: req.session.user });  // Pass the posts to the template
-  // } catch (error) {
-  //   res.status(500).send('Error fetching posts');
-  // }
 });
 
 app.get('/view/:post_id', async (req, res) => {
@@ -125,6 +115,20 @@ app.get('/register', (req, res) => {
   res.render('register');
 });
 
+app.get('/edit/:post_id', isAuthenticated, async (req, res) => {
+  try {
+    const id = req.params.post_id;
+    const post = await getPost(id);
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+    res.render('edit', { post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching post for editing');
+  }
+});
+
 // Action routes
 
 app.post('/loginAction/', async (req, res) => {
@@ -160,7 +164,6 @@ app.get('/logout', (req, res) => {
       console.error(err);
       return res.status(500).send("Could not log out.");
     }
-    console.log('Congratulations! You are the first person to log out');
     res.redirect('/');
   });
 });
@@ -184,6 +187,7 @@ app.post('/deletePost/:post_id', async (req, res) => {
   }
 });
 
+
 //POST route to create a new blog post
 app.post('/newPost/', multer.single('images'), async (req, res) => {
 
@@ -205,11 +209,8 @@ try {
     // Extract just the file name from the paths
     const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     fileName = `uploads/${uniquePrefix}-${req.file.originalname}`;
-
     const blob = bucket.file(fileName);
     const blobStream = blob.createWriteStream();
-
-
     await new Promise<void>((resolve, reject) => {
       blobStream.on('error', reject);
       blobStream.on('finish', () => {
@@ -220,10 +221,8 @@ try {
     });
   }
   
-    
     const authorId = req.session.user.userId;
     await createBlogPost(title, postDescription, content, authorId, fileName);
-
     // Update the cache on CRUD operations
     await updateCache();
     //Finally, all operations successfuly complete. redirect to the home page
@@ -235,9 +234,47 @@ try {
       if (!res.headersSent) {
         res.status(500).send('Error creating post');
       }
-
   }
 });
+
+// Update an existing blog post
+
+app.post('/editPost/', async (req, res) => {
+
+    // Extract data from request body
+    const { title, description: postDescription, content, postId } = req.body;
+  
+    if (!title || !postDescription || !content || !postId) {
+      return res.status(400).send('All fields are required');
+  }
+  
+  if (!req.session.user) {
+    return res.status(401).send('Please log in to edit a post.');
+  }
+
+  if (req.body.author_id !== req.session.user.userId) {
+    return res.status(403).send('You are not authorized to edit this post.');
+  }
+
+  try {
+
+    const updateResult = await updateBlogPost(postId, title, postDescription, content);
+    // Update the cache on CRUD operations
+    if (updateResult && updateResult.postId) {
+    await updateCache();
+    res.redirect(`/view/${postId}`);
+  } else {
+    res.status(404).send('Something went wrong');
+  }
+} catch (error) {
+  console.error("Error in POST /editPost/ handler:", error);
+  if (!res.headersSent) {
+    res.status(500).send('Error updating post');
+  }
+}
+});
+
+
 
 // // POST route to create a new user
 app.post('/registerAction/', async (req, res) => {
