@@ -1,5 +1,5 @@
-import { PostPreview} from './types';
-import { getPostPreviews } from './database';
+import { PostPreview} from '../interfaces/types';
+import { getPostPreviews } from '../models/postModel';
 
 interface PostCache {
   posts: PostPreview[];

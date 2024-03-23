@@ -3,8 +3,9 @@ import Multer from 'multer';
 import * as gcs from '@google-cloud/storage';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { getPost, getUserPosts, getUserByUsername, createUser, createBlogPost, updateBlogPost, deleteBlogPost } from './database';
-import { getCachedPosts, isCacheStale, updateCache } from './cache';
+import { createUser, getUserByUsername } from './models/userModel';
+import { getPost, getUserPosts,  createBlogPost, updateBlogPost, deleteBlogPost } from './models/postModel';
+import { getCachedPosts, isCacheStale, updateCache } from './services/cacheService';
 
 declare module 'express-session' {
   export interface SessionData {
