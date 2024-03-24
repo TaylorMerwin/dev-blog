@@ -29,44 +29,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const multer_1 = __importDefault(require("multer"));
 const gcs = __importStar(require("@google-cloud/storage"));
-//import path from 'path';
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const express_session_1 = __importDefault(require("express-session"));
-const database_1 = require("./database");
-// OLD
-// Configure multer storage
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         // Generate a unique file name with the original extension
-//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-//     }
-// });
-//const upload = multer({ storage: storage });
+const userModel_1 = require("./models/userModel");
+const postModel_1 = require("./models/postModel");
+const cacheService_1 = require("./services/cacheService");
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080;
+// Update the cache on server startup
+(0, cacheService_1.updateCache)();
 const storage = new gcs.Storage({
     projectId: process.env.GCLOUD_PROJECT_ID || 'bloggy-414621'
 });
 const bucketname = process.env.GCLOUD_STORAGE_BUCKET || 'bloggy-images';
 //A bucket is a container for objects (files).
 const bucket = storage.bucket(bucketname);
-// async function authenticateImplicitWithAdc() {
-//   // This snippet demonstrates how to list buckets.
-//   // NOTE: Replace the client created below with the client required for your application.
-//   // Note that the credentials are not specified when constructing the client.
-//   // The client library finds your credentials using ADC.
-//   const [buckets] = await storage.getBuckets();
-//   console.log('Buckets:');
-//   for (const bucket of buckets) {
-//     console.log(`- ${bucket.name}`);
-//   }
-//   console.log('Listed all storage buckets.');
-// }
-// authenticateImplicitWithAdc();
 app.set("view engine", "ejs");
 app.use(express_1.default.static('public'));
 app.use(express_1.default.static('uploads'));
@@ -105,18 +82,18 @@ function isAuthenticated(req, res, next) {
 }
 // Page routes
 app.get('/', async (req, res) => {
-    try {
-        const posts = await (0, database_1.getPostsWithAuthor)(); // Fetch all posts
-        res.render('index', { posts, user: req.session.user }); // Pass the posts to the template
+    let posts = [];
+    // check if the cache is too old
+    if ((0, cacheService_1.isCacheStale)()) {
+        await (0, cacheService_1.updateCache)();
     }
-    catch (error) {
-        res.status(500).send('Error fetching posts');
-    }
+    posts = (0, cacheService_1.getCachedPosts)();
+    res.render('index', { posts, user: req.session.user });
 });
 app.get('/view/:post_id', async (req, res) => {
     try {
         const id = req.params.post_id;
-        const post = await (0, database_1.getPost)(id); // This should return a single post object
+        const post = await (0, postModel_1.getPost)(id); // This should return a single post object
         if (!post) {
             return res.status(404).send('Post not found');
         }
@@ -135,8 +112,8 @@ app.get('/user', isAuthenticated, async (req, res) => {
         if (!req.session.user) {
             return res.status(401).send('Please log in to view this page.');
         }
-        const userInfo = await (0, database_1.getUserByUsername)(req.session.user.username);
-        const posts = await (0, database_1.getUserPosts)(req.session.user.userId.toString());
+        const userInfo = await (0, userModel_1.getUserByUsername)(req.session.user.username);
+        const posts = await (0, postModel_1.getUserPosts)(req.session.user.userId.toString());
         res.render('user', { posts, userInfo, user: req.session.user });
     }
     catch (error) {
@@ -149,6 +126,20 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 });
+app.get('/edit/:post_id', isAuthenticated, async (req, res) => {
+    try {
+        const id = req.params.post_id;
+        const post = await (0, postModel_1.getPost)(id);
+        if (!post) {
+            return res.status(404).send('Post not found');
+        }
+        res.render('edit', { post });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching post for editing');
+    }
+});
 // Action routes
 app.post('/loginAction/', async (req, res) => {
     const { username, password } = req.body;
@@ -156,7 +147,7 @@ app.post('/loginAction/', async (req, res) => {
         return res.status(400).send("Username and password are required.");
     }
     try {
-        const user = await (0, database_1.getUserByUsername)(username);
+        const user = await (0, userModel_1.getUserByUsername)(username);
         //console.log('User:', user);
         if (user) {
             const match = await bcrypt_1.default.compare(password, user.password_hash);
@@ -184,7 +175,6 @@ app.get('/logout', (req, res) => {
             console.error(err);
             return res.status(500).send("Could not log out.");
         }
-        console.log('Congratulations! You are the first person to log out');
         res.redirect('/');
     });
 });
@@ -195,8 +185,10 @@ app.post('/deletePost/:post_id', async (req, res) => {
         return res.status(400).send('Invalid post ID.');
     }
     try {
-        await (0, database_1.deleteBlogPost)(postID);
+        await (0, postModel_1.deleteBlogPost)(postID);
         console.log(`Post with ID ${postID} deleted.`);
+        // Update the cache on CRUD operations
+        await (0, cacheService_1.updateCache)();
         res.redirect('/');
     }
     catch (error) {
@@ -233,7 +225,9 @@ app.post('/newPost/', multer.single('images'), async (req, res) => {
             });
         }
         const authorId = req.session.user.userId;
-        await (0, database_1.createBlogPost)(title, postDescription, content, authorId, fileName);
+        await (0, postModel_1.createBlogPost)(title, postDescription, content, authorId, fileName);
+        // Update the cache on CRUD operations
+        await (0, cacheService_1.updateCache)();
         //Finally, all operations successfuly complete. redirect to the home page
         res.redirect('/');
     }
@@ -241,6 +235,39 @@ app.post('/newPost/', multer.single('images'), async (req, res) => {
         console.error('Error in POST /newPost/ handler:', error);
         if (!res.headersSent) {
             res.status(500).send('Error creating post');
+        }
+    }
+});
+// Update an existing blog post
+app.post('/editPost/', async (req, res) => {
+    // Extract data from request body
+    const { title, description: postDescription, content, postId, authorId } = req.body;
+    if (!title || !postDescription || !content || !postId) {
+        return res.status(400).send('All fields are required');
+    }
+    if (!req.session.user) {
+        return res.status(401).send('Please log in to edit a post.');
+    }
+    if (authorId != req.session.user.userId) {
+        console.log('User ID:', req.session.user.userId);
+        console.log('Author ID:', authorId);
+        return res.status(403).send('You are not authorized to edit this post.');
+    }
+    try {
+        const updateResult = await (0, postModel_1.updateBlogPost)(postId, title, postDescription, content);
+        // Update the cache on CRUD operations
+        if (updateResult && updateResult.postId) {
+            await (0, cacheService_1.updateCache)();
+            res.redirect(`/`);
+        }
+        else {
+            res.status(404).send('Something went wrong');
+        }
+    }
+    catch (error) {
+        console.error("Error in POST /editPost/ handler:", error);
+        if (!res.headersSent) {
+            res.status(500).send('Error updating post');
         }
     }
 });
@@ -253,7 +280,7 @@ app.post('/registerAction/', async (req, res) => {
             // Handle missing username or password appropriately
             return res.status(400).send("Username and password are required.");
         }
-        const user = await (0, database_1.getUserByUsername)(username);
+        const user = await (0, userModel_1.getUserByUsername)(username);
         // User already exists
         if (user) {
             res.send('Username already taken.');
@@ -269,7 +296,7 @@ app.post('/registerAction/', async (req, res) => {
         else {
             // Hash the password
             const password_hash = await bcrypt_1.default.hash(password, 10);
-            await (0, database_1.createUser)(username, email, password_hash);
+            await (0, userModel_1.createUser)(username, email, password_hash);
             res.redirect('/login');
         }
     }
@@ -298,54 +325,6 @@ app.post('/upload', multer.single('file'), (req, res, next) => {
         });
     });
     blobStream.end(req.file.buffer);
-});
-// Not being used in app but helpful for testing
-// get a post by id
-app.get('/blogPost/:post_id', async (req, res) => {
-    try {
-        const id = req.params.post_id;
-        const post = await (0, database_1.getPost)(id);
-        res.json(post); // Use res.json to send JSON response
-    }
-    catch (error) {
-        res.status(500).send('Error fetching post');
-    }
-});
-// get all users (usernames and passwords)
-app.get('/getUsers/', async (req, res) => {
-    try {
-        const users = await (0, database_1.getUsers)(); // Fetch all users
-        res.json(users); // Send the users as JSON response
-    }
-    catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).send('Error fetching users');
-    }
-});
-// get a post preview by id
-app.get('/postPreview/:post_id', async (req, res) => {
-    try {
-        const id = req.params.post_id;
-        const post = await (0, database_1.getPostPreview)(id);
-        res.json(post); // Use res.json to send JSON response
-    }
-    catch (error) {
-        res.status(500).send('Error fetching post');
-    }
-});
-// get all posts
-app.get('/blogPosts/', async (req, res) => {
-    console.log('Handling GET /blogPosts/ request...');
-    try {
-        console.log('Calling getPosts...');
-        const posts = await (0, database_1.getPosts)();
-        console.log('getPosts returned, sending response...');
-        res.send(posts);
-    }
-    catch (error) {
-        console.error('Error in GET /blogPosts/ handler:', error);
-        res.status(500).send('Error fetching posts');
-    }
 });
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
