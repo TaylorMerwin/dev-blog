@@ -22,4 +22,3 @@ export interface Post {
   author_name: string;
   content: string;
 }
-
