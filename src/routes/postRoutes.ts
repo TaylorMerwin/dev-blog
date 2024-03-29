@@ -173,9 +173,22 @@ router.post('/deletePost/:post_id', async (req, res) => {
     return res.status(400).send('Invalid post ID.');
   }
 
+  if (!req.session.user) {
+    return res.status(401).send('Please log in to delete a post.');
+  }
+
   try {
+
+    const posts = await getPost(postID.toString());
+    const post = posts[0];
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+    const authorId = post.author_id;
+    if (authorId != req.session.user.userId) {
+      return res.status(403).send('You are not authorized to delete this post.');
+    }
     await deleteBlogPost(postID);
-    console.log(`Post with ID ${postID} deleted.`);
     // Update the cache on CRUD operations
     await updateCache();
     res.redirect('/');
