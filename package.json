@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node src/server.ts",
+    "dev": "concurrently \"npm:tailwind:watch\" \"npm:server\"",
+    "server": "ts-node src/server.ts",
     "lint": "eslint . --ext .ts",
     "tailwind:css": "postcss public/styles/tailwind.css -o public/styles/style.css",
     "tailwind:watch": "postcss public/styles/tailwind.css -o public/styles/style.css --watch"
@@ -15,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.12",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.17.10",
@@ -24,6 +26,7 @@
     "@typescript-eslint/parser": "^6.14.0",
     "autoprefixer": "^10.4.19",
     "concurrently": "^8.2.2",
+    "daisyui": "^4.9.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

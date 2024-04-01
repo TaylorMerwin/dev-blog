@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" datatheme="bumblebee">
 
 <head>
   <meta charset="UTF-8" />
@@ -9,63 +9,85 @@
   <title>Bloggy</title>
 </head>
 
-<body>
-  <header class="header">
-    <a href="/">
-      <h1>Bloggy</h1>
-    </a>
-    <nav>
-      <a href="/create">Create</a>
-      <a href="#">About</a>
-    </nav>
-  </header>
+<body class="bg-base-300">
 
-  <% post.slice().forEach(function(post) { %>
-    <main>
-      <div class=" article-container">
-        <h1 class="article-title">
-          <%=post.title %>
-        </h1>
-        <div class="article-about">
-          <p class="article-date">
-            <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
-              day: 'numeric' , year: 'numeric' }); %>
-              <%= formattedDate %>
-          </p>
-          <p class="article-author">
-            <%= post.author_name %>
-          </p>
-        </div>
-        <div class="article-image">
-          <img src="https://storage.googleapis.com/bloggy-images/<%=post.image_path%>" alt="Article Image"
-            class="article-img" />
-        </div>
-        <div class="article-content">
-          <!-- This is where the blog text will go! -->
-          <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
-          <md-block class="article-body">
-            <%= post.content %>
-          </md-block>
+  <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
         </div>
       </div>
+      <a class="btn btn-ghost text-xl">Bloggy</a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+    </div>
+    <div class="navbar-end">
 
-      <form action="/deletePost/<%= post.post_id %>" method="post" onsubmit="return confirmDelete()">
-        <button type="submit" id="deleteButton">Delete Post</button>
-      </form>
 
-      <form action="/edit/<%= post.post_id %>" method="get">
-        <button type="submit" id="editButton">Edit Post</button>
+      <div class="navbar-end">
 
-        <script>
-          function confirmDelete() {
-            return confirm('Are you sure you want to delete this post?');
-          }
-        </script>
-    </main>
-    <% }); %>
+        <% if (!user) { %>
+          <a href="/login"><button class="btn">Login</button></a>
+          <a href="/register"><button class="btn">Join</button></a>
+          <% } %>
 
-      <!-- Imported Library that adds md-blocks-->
-      <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+            <% if (user) { %>
+              <a href="/create"><button class="btn-primary">Create</button></a>
+              <a href="/user"><button class="btn">User</button></a>
+              <a href="/logout"><button class="btn">Logout</button></a>
+              <% } %>
+      </div>
+    </div>
+
+    <% post.slice().forEach(function(post) { %>
+      <main>
+        <div class=" article-container">
+          <h1 class="article-title">
+            <%=post.title %>
+          </h1>
+          <div class="article-about">
+            <p class="article-date">
+              <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long'
+                , day: 'numeric' , year: 'numeric' }); %>
+                <%= formattedDate %>
+            </p>
+            <p class="article-author">
+              <%= post.author_name %>
+            </p>
+          </div>
+          <div class="article-image">
+            <img src="https://storage.googleapis.com/bloggy-images/<%=post.image_path%>" alt="Article Image"
+              class="article-img" />
+          </div>
+          <div class="article-content">
+            <!-- This is where the blog text will go! -->
+            <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
+            <md-block class="article-body">
+              <%= post.content %>
+            </md-block>
+          </div>
+        </div>
+
+        <form action="/deletePost/<%= post.post_id %>" method="post" onsubmit="return confirmDelete()">
+          <button type="submit" id="deleteButton">Delete Post</button>
+        </form>
+
+        <form action="/edit/<%= post.post_id %>" method="get">
+          <button type="submit" id="editButton">Edit Post</button>
+
+          <script>
+            function confirmDelete() {
+              return confirm('Are you sure you want to delete this post?');
+            }
+          </script>
+      </main>
+      <% }); %>
+
+        <!-- Imported Library that adds md-blocks-->
+        <script type="module" src="https://md-block.verou.me/md-block.js"></script>
 </body>
 
 </html>

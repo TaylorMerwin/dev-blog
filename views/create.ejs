@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" datatheme="bumblebee">
 
 <head>
   <meta charset="UTF-8">
@@ -13,43 +13,67 @@
 
 </head>
 
-<body>
-  <header class="header">
-    <h1>Bloggy</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="#">About</a>
-    </nav>
-  </header>
+<body class="bg-base-300">
 
-  <section class="form-section">
-    <h1>Create a New Blog Post</h1>
-    <form enctype="multipart/form-data" action="/newPost/" method="POST">
-
-
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" /><br /><br />
-      <label for="description">Description:</label>
-      <input type="text" id="description" name="description" /><br /><br />
-      <label>Upload image
-        <input type="file" name="images" accept="image/png, image/jpeg" id="imageInput" />
-      </label><br /><br />
-      <div class="img-container">
-        <img id="imagePreview" style="max-width: 100%;" />
+  <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
       </div>
-      <label for="content">Content:</label><br />
-      <textarea id="content" name="content"></textarea>
-      <script>
-        var easyMDE = new EasyMDE({
-          element: document.getElementById('content')
-        });
-      </script>
-      <br />
-      <div class="g-recaptcha" data-sitekey="6LeAepopAAAAADJceMdR6hc775TYyB6TGQgr1CGd"></div>
-      <br />
-      <input id="submitButton" type="submit" value="Submit" />
-    </form>
-  </section>
+      <a class="btn btn-ghost text-xl">Bloggy</a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+    </div>
+    <div class="navbar-end">
+
+
+      <div class="navbar-end">
+
+        <% if (!user) { %>
+          <a href="/login"><button class="btn">Login</button></a>
+          <a href="/register"><button class="btn">Join</button></a>
+          <% } %>
+
+            <% if (user) { %>
+              <a href="/create"><button class="btn-primary">Create</button></a>
+              <a href="/user"><button class="btn">User</button></a>
+              <a href="/logout"><button class="btn">Logout</button></a>
+              <% } %>
+      </div>
+    </div>
+
+    <section class="form-section">
+      <h1>Create a New Blog Post</h1>
+      <form enctype="multipart/form-data" action="/newPost/" method="POST">
+
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" /><br /><br />
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" /><br /><br />
+        <label>Upload image
+          <input type="file" name="images" accept="image/png, image/jpeg" id="imageInput" />
+        </label><br /><br />
+        <div class="img-container">
+          <img id="imagePreview" style="max-width: 100%;" />
+        </div>
+        <label for="content">Content:</label><br />
+        <textarea id="content" name="content"></textarea>
+        <script>
+          var easyMDE = new EasyMDE({
+            element: document.getElementById('content')
+          });
+        </script>
+        <br />
+        <div class="g-recaptcha" data-sitekey="6LeAepopAAAAADJceMdR6hc775TYyB6TGQgr1CGd"></div>
+        <br />
+        <input id="submitButton" type="submit" value="Submit" />
+      </form>
+    </section>
 </body>
 
 </html>

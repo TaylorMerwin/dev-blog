@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" datatheme="bumblebee">
 
 <head>
   <meta charset="UTF-8">
@@ -9,65 +9,81 @@
   <title>User Info</title>
 </head>
 
-<body>
-  <header class="header">
-    <a href="/">
-      <h1>Bloggy</h1>
-    </a>
-    <nav>
-      <a href="/create">Create</a>
+<body class="bg-base-300">
 
-      <a href="https://github.com/TaylorMerwin/bloggy">About</a>
-
-      <% if (user) { %>
-        <a href="/user">User</a>
-        <a href="/logout">Logout</a>
-        <% } %>
-
-    </nav>
-  </header>
-  <div class="user-info">
-    <h2>User Info</h2>
-    <p>
-      <%= userInfo.username %>
-    </p>
-    <p>
-      <%= userInfo.email %>
-    </p>
-
-
-
-
-
-
-    <div class="posts">
-
-      <% posts.slice().reverse().forEach(function(post) { %>
-        <a href="/view/<%= post.post_id %>">
-          <section class="featured">
-            <div class="featured-image-container">
-              <!-- If there's an image, show it, otherwise show a placeholder -->
-              <img src="/<%= post.image_path%>" alt="Featured Blog Post Image">
-            </div>
-            <div class="featured-text-container">
-              <p>
-                <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', {
-                  month: 'long' , day: 'numeric' , year: 'numeric' }); %>
-                  <%= formattedDate %>
-              </p>
-              <h2>
-                <%= post.title %>
-              </h2>
-              <div class="featured-description">
-                <p>
-                  <%= post.post_description %>
-                </p>
-              </div>
-            </div>
-          </section>
-        </a>
-        <% }); %>
+  <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
+      </div>
+      <a class="btn btn-ghost text-xl">Bloggy</a>
     </div>
+    <div class="navbar-center hidden lg:flex">
+    </div>
+    <div class="navbar-end">
+
+
+      <div class="navbar-end">
+
+        <% if (!user) { %>
+          <a href="/login"><button class="btn">Login</button></a>
+          <a href="/register"><button class="btn">Join</button></a>
+          <% } %>
+
+            <% if (user) { %>
+              <a href="/create"><button class="btn-primary">Create</button></a>
+              <a href="/user"><button class="btn">User</button></a>
+              <a href="/logout"><button class="btn">Logout</button></a>
+              <% } %>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <h2>User Info</h2>
+      <p>
+        <%= userInfo.username %>
+      </p>
+      <p>
+        <%= userInfo.email %>
+      </p>
+
+
+
+
+
+
+      <div class="posts">
+
+        <% posts.slice().reverse().forEach(function(post) { %>
+          <a href="/view/<%= post.post_id %>">
+            <section class="featured">
+              <div class="featured-image-container">
+                <!-- If there's an image, show it, otherwise show a placeholder -->
+                <img src="/<%= post.image_path%>" alt="Featured Blog Post Image">
+              </div>
+              <div class="featured-text-container">
+                <p>
+                  <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', {
+                    month: 'long' , day: 'numeric' , year: 'numeric' }); %>
+                    <%= formattedDate %>
+                </p>
+                <h2>
+                  <%= post.title %>
+                </h2>
+                <div class="featured-description">
+                  <p>
+                    <%= post.post_description %>
+                  </p>
+                </div>
+              </div>
+            </section>
+          </a>
+          <% }); %>
+      </div>
 
 </body>
 
