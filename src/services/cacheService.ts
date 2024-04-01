@@ -1,5 +1,5 @@
-import { PostPreview} from '../interfaces/types';
-import { getPostPreviews } from '../models/postModel';
+import { PostPreview } from "../interfaces/types";
+import { getPostPreviews } from "../models/postModel";
 
 interface PostCache {
   posts: PostPreview[];
@@ -20,7 +20,7 @@ export async function updateCache(): Promise<void> {
     postCache.posts = recentPosts;
     postCache.lastUpdated = new Date();
   } catch (error) {
-    console.error('Failed to update post cache:', error);
+    console.error("Failed to update post cache:", error);
   }
 }
 
@@ -31,5 +31,8 @@ export function getCachedPosts(): PostPreview[] {
 export function isCacheStale(): boolean {
   const now = new Date();
   const maxAge = 10 * 60 * 1000; // 10 minutes
-  return postCache.lastUpdated === null || now.getTime() - postCache.lastUpdated.getTime() > maxAge;
+  return (
+    postCache.lastUpdated === null ||
+    now.getTime() - postCache.lastUpdated.getTime() > maxAge
+  );
 }
