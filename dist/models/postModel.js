@@ -24,7 +24,7 @@ async function getPost(postID) {
 exports.getPost = getPost;
 async function getPostPreviews(lastPostId, limit = 10) {
     // Only apply the WHERE clause if lastPostId is provided and greater than 0
-    const whereClause = lastPostId && lastPostId > 0 ? `WHERE post_id < $1` : '';
+    const whereClause = lastPostId && lastPostId > 0 ? `WHERE post_id < $1` : "";
     const query = `
   SELECT 
     BlogPosts.title, 
@@ -72,9 +72,15 @@ async function createBlogPost(title, postDescription, content, authorId, imagePa
   INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING post_id`;
-    const result = await database_1.pool.query(query, [title, postDescription, content, authorId, imagePath]);
+    const result = await database_1.pool.query(query, [
+        title,
+        postDescription,
+        content,
+        authorId,
+        imagePath,
+    ]);
     const postId = result.rows[0].post_id;
-    return { message: 'Blog post created successfully', postId };
+    return { message: "Blog post created successfully", postId };
 }
 exports.createBlogPost = createBlogPost;
 // Update an existing blog post
@@ -85,23 +91,31 @@ async function updateBlogPost(postId, title, postDescription, content) {
   WHERE post_id = $1
   RETURNING post_id`;
     try {
-        const result = await database_1.pool.query(query, [postId, title, postDescription, content]);
+        const result = await database_1.pool.query(query, [
+            postId,
+            title,
+            postDescription,
+            content,
+        ]);
         if (result.rows.length > 0) {
-            return { message: 'Blog post updated successfully', postId: result.rows[0].post_id };
+            return {
+                message: "Blog post updated successfully",
+                postId: result.rows[0].post_id,
+            };
         }
         else {
-            return { message: 'Blog post not found / no changes made', postId: null };
+            return { message: "Blog post not found / no changes made", postId: null };
         }
     }
     catch (error) {
-        console.error('Error updating post:', error);
+        console.error("Error updating post:", error);
         throw error;
     }
 }
 exports.updateBlogPost = updateBlogPost;
 // Delete Blog Post
 async function deleteBlogPost(postID) {
-    const query = 'DELETE FROM BlogPosts WHERE post_id = $1';
+    const query = "DELETE FROM BlogPosts WHERE post_id = $1";
     await database_1.pool.query(query, [postID]);
 }
 exports.deleteBlogPost = deleteBlogPost;

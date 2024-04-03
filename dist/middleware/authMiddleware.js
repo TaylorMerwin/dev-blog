@@ -7,7 +7,7 @@ function isAuthenticated(req, res, next) {
     }
     else {
         // User is not logged in, send an error message or redirect to login
-        res.status(401).send('Please log in to view this page.');
+        res.status(401).send("Please log in to view this page.");
         // Or redirect to login page: res.redirect('/login');
     }
 }

@@ -25,6 +25,6 @@ async function createUser(username, email, passwordHash) {
   INSERT INTO Users (username, email, password_hash)
   VALUES ($1, $2, $3)`;
     await database_1.pool.query(query, [username, email, passwordHash]);
-    return { message: 'User created successfully' };
+    return { message: "User created successfully" };
 }
 exports.createUser = createUser;

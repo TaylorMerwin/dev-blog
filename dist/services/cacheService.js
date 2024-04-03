@@ -15,7 +15,7 @@ async function updateCache() {
         postCache.lastUpdated = new Date();
     }
     catch (error) {
-        console.error('Failed to update post cache:', error);
+        console.error("Failed to update post cache:", error);
     }
 }
 exports.updateCache = updateCache;
@@ -26,6 +26,7 @@ exports.getCachedPosts = getCachedPosts;
 function isCacheStale() {
     const now = new Date();
     const maxAge = 10 * 60 * 1000; // 10 minutes
-    return postCache.lastUpdated === null || now.getTime() - postCache.lastUpdated.getTime() > maxAge;
+    return (postCache.lastUpdated === null ||
+        now.getTime() - postCache.lastUpdated.getTime() > maxAge);
 }
 exports.isCacheStale = isCacheStale;
