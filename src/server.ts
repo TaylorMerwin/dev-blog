@@ -1,5 +1,6 @@
 import express from "express";
 import session from "express-session";
+import rateLimit from "express-rate-limit";
 
 import { updateCache } from "./services/cacheService";
 import postRoutes from "./routes/postRoutes";
@@ -15,6 +16,12 @@ declare module "express-session" {
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 updateCache();
 
@@ -30,6 +37,7 @@ app.use(
     saveUninitialized: false,
   }),
 );
+app.use(limiter);
 
 app.use(postRoutes);
 app.use(homeRoutes);
