@@ -27,7 +27,7 @@ router.get("/view/:post_id", async (req, res) => {
     if (!post) {
       return res.status(404).send("Post not found");
     }
-    res.render("view", { post }); // Pass the post to the view.ejs template
+    res.render("view", { post, user: req.session.user }); // Pass the post to the view.ejs template
   } catch (error) {
     console.error(error);
     res.status(500).send("Error fetching post");

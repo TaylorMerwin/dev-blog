@@ -4,30 +4,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
-  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-  <link rel="stylesheet" href="/style.css">
-  <title>Sign Up - Bloggy</title>
-
+  <link rel="stylesheet" href="/styles/style.css">
+  <title>Join - Bloggy</title>
 </head>
 
-<body>
-  <header class="header">
-    <a href="/">
-      <h1>Bloggy</h1>
-    </a>
-    <nav>
-      <a href="/">Home</a>
-      <a href="https://github.com/TaylorMerwin/bloggy">About</a>
-    </nav>
-  </header>
+<body class="bg-base-300">
 
-<section class="registration-container">
-    <h1>Create a new account!</h1>
-    <form action="/registerAction/" method="post" class="registration-form">
-      <input type="text" name="username" placeholder="Username" required>
-      <input type="text" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <button type="submit">Create</button>
-    </form>
-</section>
+  <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
+        </div>
+      </div>
+      <a href="/" class="btn btn-ghost text-xl">Bloggy</a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+    </div>
+  </div>
+
+  <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
+    <div class="flex justify-center self-center  z-10">
+      <div class="p-12 bg-base-100 mx-auto rounded-2xl w-100 ">
+        <div class="mb-4">
+          <h3 class="font-semibold text-2xl">Register</h3>
+          <p>Register an account</p>
+        </div>
+        <form action="/registerAction/" method="post" class="registration-form">
+          <div class="space-y-5">
+            <div class="space-y-2">
+              <label class="text-sm font-medium tracking-wide">Username</label>
+              <input
+                class=" w-full text-base bg-base-100 px-4 py-2 border rounded-lg focus:outline-none focus:border-primary"
+                type="text" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="space-y-2">
+              <label class="mb-5 text-sm font-medium tracking-wide">
+                Email
+              </label>
+              <input
+                class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
+                type="text" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="space-y-2">
+              <label class="mb-5 text-sm font-medium tracking-wide">
+                Password
+              </label>
+              <input
+                class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
+                type="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div>
+              <button type="submit"
+                class="w-full flex justify-center btn btn-outline btn-primary  hover:bg-secondary  p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                Register
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="pt-5 text-center">
+          <a href="/login" class=" text-primary text-center">Already have an account?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

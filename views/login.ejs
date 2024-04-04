@@ -4,17 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
-  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
   <link rel="stylesheet" href="/styles/style.css">
-  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
   <title>Login - Bloggy</title>
-
 </head>
 
 <body class="bg-base-300">
 
-  <div class="navbar bg-primary">
+  <div class="navbar bg-base-100">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -23,12 +19,10 @@
           </svg>
         </div>
       </div>
-      <a class="btn btn-ghost text-xl">Bloggy</a>
+      <a href="/" class="btn btn-ghost text-xl">Bloggy</a>
     </div>
     <div class="navbar-center hidden lg:flex">
     </div>
-
-
   </div>
 
   <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
@@ -57,12 +51,16 @@
 
             <div>
               <button type="submit"
-                class="w-full flex justify-center bg-primary  hover:bg-secondary  p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                class="w-full flex justify-center btn btn-outline btn-primary  hover:bg-secondary  p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
                 Sign in
               </button>
             </div>
           </div>
         </form>
+        <div class="pt-5 text-center">
+          <a href="/register" class=" text-primary text-center">Don't have an account?</a>
+        </div>
       </div>
     </div>
   </div>
+</body>
