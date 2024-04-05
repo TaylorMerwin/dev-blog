@@ -16,6 +16,7 @@ declare module "express-session" {
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const SECRET = process.env.SECRET || "my_secret";
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   limit: 20,
@@ -32,13 +33,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "my_secret_key",
+    secret: SECRET,
     resave: false,
     saveUninitialized: false,
   }),
 );
 app.use(limiter);
-
 app.use(postRoutes);
 app.use(homeRoutes);
 app.use(userRoutes);
