@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 const SECRET = process.env.SECRET || "my_secret";
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  limit: 20,
+  limit: 100,
   standardHeaders: true,
   legacyHeaders: false,
 });

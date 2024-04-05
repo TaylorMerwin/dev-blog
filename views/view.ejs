@@ -18,36 +18,41 @@
           </svg>
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-          <li><a>Item 1</a></li>
-          <li>
-            <a>Parent</a>
-            <ul class="p-2">
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
-            </ul>
-          </li>
-          <li><a>Item 3</a></li>
+          <% if (!user) { %>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a>Item 3</a></li>
+            <% } else { %>
+              <li><a href="/user">
+                  <%= user.username %>
+                </a></li>
+              <li><a href="/logout">Logout</a></li>
+              <li><a>Item 3</a></li>
+              <% } %>
+                <li><a>About</a></li>
+                <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
         </ul>
       </div>
       <a class="btn btn-ghost text-xl">bloggy</a>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><a>Item 1</a></li>
-        <li>
-          <details>
-            <summary>Parent</summary>
-            <ul class="p-2">
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
-            </ul>
-          </details>
-        </li>
-        <li><a>Item 3</a></li>
+        <% if (!user) { %>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+          <li><a>Item 3</a></li>
+          <% } else { %>
+            <li><a href="/user">
+                <%= user.username %>
+              </a></li>
+            <li><a href="/logout">Logout</a></li>
+            <% } %>
+              <li><a>About</a></li>
+              <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
       </ul>
     </div>
     <div class="navbar-end">
-      <a class="btn btn-outline btn-primary" href="/create/">Create Post</a>
+      <a class="btn btn-outline btn-primary" href="/create">Create Post</a>
     </div>
   </div>
 

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/user", isAuthenticated, async (req, res) => {
   try {
     if (!req.session.user) {
-      return res.status(401).send("Please log in to view this page.");
+      return res.redirect("/login");
     }
     const userInfo = await getUserByUsername(req.session.user.username);
     const posts = await getUserPosts(req.session.user.userId.toString());
