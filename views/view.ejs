@@ -33,7 +33,7 @@
                 <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
         </ul>
       </div>
-      <a class="btn btn-ghost text-xl">bloggy</a>
+      <a href="/" class="btn btn-ghost text-xl">bloggy</a>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
@@ -61,26 +61,43 @@
   <% post.slice().forEach(function(post) { %>
 
 
-    <div class="container mx-auto p-8">
-      <article class="prose ">
+    <div class="container mx-auto p-8 ">
+      <article class="prose justify-center mx-auto">
         <div class="flex justify-center overflow-hidden">
-          <img src="https://storage.googleapis.com/bloggy-images/<%=post.image_path%>" alt="Article Image" />
+          <% if (post.image_path) {%>
+            <img src="https://storage.googleapis.com/bloggy-images/<%=post.image_path%>" alt="Article Image" />
+            <% } %>
         </div>
 
+        <div class="flex justify-between">
+          <div class="flex flex-col">
+            <h3>
+              <%= post.author_name %>
+            </h3>
+            <h3>
+              <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long'
+                , day: 'numeric' , year: 'numeric' }); %>
+                <%=formattedDate%>
+            </h3>
+          </div>
+
+
+          <div class="stats">
+
+            <div class="stat">
+              <div class="stat-title">Total Page Views</div>
+              <div class="stat-value">89,400</div>
+            </div>
+
+          </div>
+
+        </div>
         <h1>
           <%=post.title %>
         </h1>
-        <div>
-          <h3>
-            <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
-              day: 'numeric' , year: 'numeric' }); %>
-              <%= post.author_name + " published this on " + formattedDate%>
-          </h3>
-          <br>
-        </div>
 
-        <!-- This is where the blog text will go! -->
-        <!-- md-block will autoformat the plain text into stylized text from MD syntax-->
+
+
 
         <md-block>
           <%= post.content %>

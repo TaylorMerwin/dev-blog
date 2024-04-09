@@ -35,7 +35,7 @@
                 <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
         </ul>
       </div>
-      <a class="btn btn-ghost text-xl">bloggy</a>
+      <a href="/" class="btn btn-ghost text-xl">bloggy</a>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
@@ -67,24 +67,26 @@
 
         <a class="justify-center" href="/view/<%= post.post_id%>">
           <div class="card lg:card-side bg-base-100 shadow-xl max-w-lg justify-center align-middle">
-            <figure class="lg:w-1/2"><img class="w-full lg:max-w-full"
-                src="https://storage.googleapis.com/bloggy-images/<%= post.image_path%>" alt="Card Image" />
-            </figure>
-            <div class="card-body">
-              <p>
-                <%= post.author_name %>
-                  </span> -
-                  <%= formattedDate %>
-              </p>
-              <h2 class="card-title hover:text-accent">
-                <%= post.title %>
-              </h2>
-              <p>
-                <%= post.post_description %>
-              </p>
-              <div class="card-actions justify-center">
-              </div>
-            </div>
+            <% if (post.image_path) { %>
+              <figure class="lg:w-1/2"><img class="w-full lg:max-w-full"
+                  src="https://storage.googleapis.com/bloggy-images/<%= post.image_path%>" alt="Card Image" />
+              </figure>
+              <% } %>
+                <div class="card-body">
+                  <p>
+                    <%= post.author_name %>
+                      </span> -
+                      <%= formattedDate %>
+                  </p>
+                  <h2 class="card-title hover:text-accent">
+                    <%= post.title %>
+                  </h2>
+                  <p>
+                    <%= post.post_description %>
+                  </p>
+                  <div class="card-actions justify-center">
+                  </div>
+                </div>
           </div>
         </a>
         <% }); %>
