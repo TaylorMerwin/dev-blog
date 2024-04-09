@@ -10,6 +10,7 @@ export async function getPost(postID: string) {
     BlogPosts.image_path,
     BlogPosts.post_id,
     BlogPosts.author_id,
+    BlogPosts.view_count,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -31,6 +32,7 @@ export async function getPostPreviews(lastPostId?: number, limit = 10) {
     BlogPosts.created_at,
     BlogPosts.image_path,
     BlogPosts.post_id,
+    BlogPosts.view_count,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -128,4 +130,24 @@ export async function updateBlogPost(
 export async function deleteBlogPost(postID: number): Promise<void> {
   const query = "DELETE FROM BlogPosts WHERE post_id = $1";
   await pool.query(query, [postID]);
+}
+
+export async function updateBlogViewCount(views: number, postID: number) {
+  const query = `UPDATE BlogPosts
+  SET view_count = view_count + $1
+  WHERE post_id = $2`;
+
+  try {
+    const result = await pool.query(query, [views, postID]);
+    if (result.rows.length > 0) {
+      return {
+        message: "Blog post count updated successfully",
+      };
+    } else {
+      return { message: "Blog post not found / no changes made" };
+    }
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
 }

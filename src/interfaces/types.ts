@@ -11,6 +11,7 @@ export interface PostPreview {
   image_path?: string;
   post_id: number;
   author_name: string;
+  view_count: number;
 }
 
 export interface Post {
@@ -21,4 +22,5 @@ export interface Post {
   author_id: number;
   author_name: string;
   content: string;
+  view_count: number;
 }
