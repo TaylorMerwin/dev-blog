@@ -25,7 +25,7 @@ Bloggy is a new platform for writing and sharing technical blog posts.
 1. Clone the main repo found at https://github.com/TaylorMerwin/bloggy
 2. Install Node.js on your development machine
 3. Install required packages with `npm install`
-4. Generate Database using the specified [schema](https://github.com/TaylorMerwin/bloggy/blob/main/schema.sql)
+4. Generate Database using the specified postgreSQL [schema](https://github.com/TaylorMerwin/bloggy/blob/main/schema.sql) (Needs Update)
 5. Set up a new project using GCP and create a storage bucket for images
 6. Create `.env` file with Database and storage bucket credentials
 
