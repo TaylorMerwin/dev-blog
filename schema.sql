@@ -22,12 +22,3 @@ CREATE TABLE BlogPosts (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     image_path VARCHAR(255),
 );
-
-INSERT INTO Users (username, password_hash, email)
-VALUES ('dev_user', 'hashbrowns', 'default@example.com');
-
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'ej^4s{7%?QpHjh';
-GRANT ALL PRIVILEGES ON Bloggy.* TO 'admin'@'localhost';
-
-INSERT INTO BlogPosts (title, post_description, content, author_id, image_path)
-VALUES ('It came from Planetscale', 'Straight from the underground', 'This is the content that makes up the test post!', 1, 'uploads/dolphin.jpg');
