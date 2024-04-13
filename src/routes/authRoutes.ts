@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { createUser, getUserByUsername } from "../models/userModel";
+import { validateRegistration } from "../middleware/validationMiddleware";
 
 const router = express.Router();
 
@@ -49,33 +50,20 @@ router.get("/logout", (req, res) => {
 });
 
 // // POST route to create a new user
-router.post("/registerAction/", async (req, res) => {
+router.post("/registerAction/", validateRegistration, async (req, res) => {
   // Extract data from request body
   const { username, email, password } = req.body;
   try {
-    if (!username || !password) {
-      // Handle missing username or password appropriately
-      return res.status(400).send("Username and password are required.");
-    }
     const user = await getUserByUsername(username);
     // User already exists
     if (user) {
-      res.send("Username already taken.");
-    } else if (password.length < 8) {
-      res.send("Password must be at least 8 characters.");
+      return res.send("Username already taken.");
     }
-    // Ensure valid email format
-    else if (!email.includes("@")) {
-      res.send("Invalid email.");
-    }
-    // basic validation good, continue
-    else {
-      // Hash the password
-      const password_hash = await bcrypt.hash(password, 10);
 
-      await createUser(username, email, password_hash);
-      res.redirect("/login");
-    }
+    const password_hash = await bcrypt.hash(password, 10);
+
+    await createUser(username, email, password_hash);
+    res.redirect("/login");
   } catch (error) {
     res.status(500).send(`Error creating user, ${error}`);
   }
