@@ -13,9 +13,10 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080;
+const SECRET = process.env.SECRET || "my_secret";
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 5 * 60 * 1000,
-    limit: 20,
+    limit: 100,
     standardHeaders: true,
     legacyHeaders: false,
 });
@@ -26,7 +27,7 @@ app.use(express_1.default.static("uploads"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: "my_secret_key",
+    secret: SECRET,
     resave: false,
     saveUninitialized: false,
 }));

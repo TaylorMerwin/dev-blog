@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteBlogPost = exports.updateBlogPost = exports.createBlogPost = exports.getUserPosts = exports.getPostPreviews = exports.getPost = void 0;
+exports.updateBlogViewCount = exports.deleteBlogPost = exports.updateBlogPost = exports.createBlogPost = exports.getUserPosts = exports.getPostPreviews = exports.getPost = void 0;
 const database_1 = require("./database");
 async function getPost(postID) {
     const query = `
@@ -11,6 +11,7 @@ async function getPost(postID) {
     BlogPosts.image_path,
     BlogPosts.post_id,
     BlogPosts.author_id,
+    BlogPosts.view_count,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -32,6 +33,7 @@ async function getPostPreviews(lastPostId, limit = 10) {
     BlogPosts.created_at,
     BlogPosts.image_path,
     BlogPosts.post_id,
+    BlogPosts.view_count,
     Users.username AS author_name
   FROM 
     BlogPosts 
@@ -119,3 +121,24 @@ async function deleteBlogPost(postID) {
     await database_1.pool.query(query, [postID]);
 }
 exports.deleteBlogPost = deleteBlogPost;
+async function updateBlogViewCount(views, postID) {
+    const query = `UPDATE BlogPosts
+  SET view_count = view_count + $1
+  WHERE post_id = $2`;
+    try {
+        const result = await database_1.pool.query(query, [views, postID]);
+        if (result.rows.length > 0) {
+            return {
+                message: "Blog post count updated successfully",
+            };
+        }
+        else {
+            return { message: "Blog post not found / no changes made" };
+        }
+    }
+    catch (error) {
+        console.error("Error updating post:", error);
+        throw error;
+    }
+}
+exports.updateBlogViewCount = updateBlogViewCount;

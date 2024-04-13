@@ -25,7 +25,9 @@ router.get("/view/:post_id", async (req, res) => {
         if (!post) {
             return res.status(404).send("Post not found");
         }
-        res.render("view", { post }); // Pass the post to the view.ejs template
+        // Increment the view count by 1 for this post
+        await (0, postModel_1.updateBlogViewCount)(1, parseInt(id));
+        res.render("view", { post, user: req.session.user }); // Pass the post to the view.ejs template
     }
     catch (error) {
         console.error(error);

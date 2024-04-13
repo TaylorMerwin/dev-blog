@@ -11,7 +11,7 @@ const router = express_1.default.Router();
 router.get("/user", authMiddleware_1.isAuthenticated, async (req, res) => {
     try {
         if (!req.session.user) {
-            return res.status(401).send("Please log in to view this page.");
+            return res.redirect("/login");
         }
         const userInfo = await (0, userModel_1.getUserByUsername)(req.session.user.username);
         const posts = await (0, postModel_1.getUserPosts)(req.session.user.userId.toString());
