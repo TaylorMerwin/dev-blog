@@ -62,18 +62,27 @@ router.post("/registerAction/", validateRegistration, async (req, res) => {
     const userWithEmail = await getUserByEmail(email);
     // User already exists
     if (userWithUsername) {
-      return res.send("Username already taken.");
+      return res.render("register", {
+        message: "Username already taken.",
+        email,
+      });
     }
     if (userWithEmail) {
-      return res.send("Email already taken.");
+      return res.render("Register", {
+        message: "Email already taken.",
+        username,
+      });
     }
-
     const password_hash = await bcrypt.hash(password, 10);
-
     await createUser(username, email, password_hash);
     res.redirect("/login");
   } catch (error) {
-    res.status(500).send(`Error creating user, ${error}`);
+    console.log("Error caught: " + error);
+    if (error instanceof Error) {
+      res.render("register", {
+        message: `Error creating user: ${error}`,
+      });
+    }
   }
 });
 

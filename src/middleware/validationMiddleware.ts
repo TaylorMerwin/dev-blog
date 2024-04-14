@@ -31,20 +31,28 @@ export const validateRegistration = async (
   next: NextFunction,
 ) => {
   const { username, email, password } = req.body;
+
+  let errorMessage = "";
   if (!username || !password) {
-    return res.status(400).send("Username and password are required.");
+    errorMessage = "Username and password are required.";
   }
   const usernameError = validateUsername(username);
   if (usernameError) {
-    return res.status(400).send(usernameError);
+    errorMessage = usernameError;
   }
-  const passwordError = validatePassword(password);
-  if (passwordError) {
-    return res.status(400).send(passwordError);
-  }
+
   const emailError = validateEmail(email);
   if (emailError) {
-    return res.status(400).send(emailError);
+    errorMessage = emailError;
+  }
+
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    errorMessage = passwordError;
+  }
+
+  if (errorMessage.length > 0) {
+    return res.render("register", { message: errorMessage, username, email });
   }
   next();
 };

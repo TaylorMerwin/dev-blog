@@ -10,6 +10,8 @@
 
 <body class="bg-base-300">
 
+
+
   <div class="navbar bg-base-100">
     <div class="navbar-start">
       <div class="dropdown">
@@ -25,51 +27,61 @@
     </div>
   </div>
 
+
+
+
   <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
     <div class="flex justify-center self-center  z-10">
       <div class="p-12 bg-base-100 mx-auto rounded-2xl w-100 ">
-        <div class="mb-4">
-          <h3 class="font-semibold text-2xl">Register</h3>
-          <p>Register an account</p>
-        </div>
-        <form action="/registerAction/" method="post" class="registration-form">
-          <div class="space-y-5">
-            <div class="space-y-2">
-              <label class="text-sm font-medium tracking-wide">Username</label>
-              <input
-                class=" w-full text-base bg-base-100 px-4 py-2 border rounded-lg focus:outline-none focus:border-primary"
-                type="text" name="username" placeholder="Enter your username" required>
-            </div>
-
-            <div class="space-y-2">
-              <label class="mb-5 text-sm font-medium tracking-wide">
-                Email
-              </label>
-              <input
-                class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
-                type="text" name="email" placeholder="Enter your email" required>
-            </div>
-
-            <div class="space-y-2">
-              <label class="mb-5 text-sm font-medium tracking-wide">
-                Password
-              </label>
-              <input
-                class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
-                type="password" name="password" placeholder="Enter your password" required>
-            </div>
-
-            <div>
-              <button type="submit"
-                class="w-full flex justify-center btn btn-outline btn-primary  hover:bg-secondary  p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
-                Register
-              </button>
-            </div>
+        <% if (typeof message !=='undefined' && message) { %>
+          <div class="alert alert-danger" role="alert">
+            <%= message %>
           </div>
-        </form>
-        <div class="pt-5 text-center">
-          <a href="/login" class=" text-primary text-center">Already have an account?</a>
-        </div>
+          <% } %>
+            <div class="mb-4">
+              <h3 class="font-semibold text-2xl">Register</h3>
+              <p>Register an account</p>
+            </div>
+            <form action="/registerAction/" method="post" class="registration-form">
+              <div class="space-y-5">
+                <div class="space-y-2">
+                  <label class="text-sm font-medium tracking-wide">Username</label>
+                  <input
+                    class=" w-full text-base bg-base-100 px-4 py-2 border rounded-lg focus:outline-none focus:border-primary"
+                    type="text" name="username" placeholder="Enter your username"
+                    value="<%= typeof username !== 'undefined' ? username : '' %>" required>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="mb-5 text-sm font-medium tracking-wide">
+                    Email
+                  </label>
+                  <input
+                    class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
+                    type="text" name="email" placeholder="Enter your email"
+                    value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="mb-5 text-sm font-medium tracking-wide">
+                    Password
+                  </label>
+                  <input
+                    class="w-full content-center text-base bg-base-100 px-4 py-2 border  rounded-lg focus:outline-none focus:border-green-400"
+                    type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div>
+                  <button type="submit"
+                    class="w-full flex justify-center btn btn-outline btn-primary  hover:bg-secondary  p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                    Register
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="pt-5 text-center">
+              <a href="/login" class=" text-primary text-center">Already have an account?</a>
+            </div>
       </div>
     </div>
   </div>
