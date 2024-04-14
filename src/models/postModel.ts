@@ -68,6 +68,7 @@ export async function getUserPosts(authorID: string) {
 }
 
 // Insert Functions
+
 // Create new blog post
 export async function createBlogPost(
   title: string,

@@ -12,6 +12,16 @@ export async function getUserByUsername(username: string) {
   return rows[0] as User;
 }
 
+export async function getUserByEmail(email: string) {
+  const query = `
+  SELECT * 
+  FROM Users
+  WHERE email = $1`;
+  const result = await pool.query(query, [email]);
+  const rows = result.rows;
+  return rows[0] as User;
+}
+
 /**
  * Insert a new user into the Users table
  * @param username

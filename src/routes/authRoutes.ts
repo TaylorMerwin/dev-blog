@@ -1,6 +1,10 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { createUser, getUserByUsername } from "../models/userModel";
+import {
+  createUser,
+  getUserByUsername,
+  getUserByEmail,
+} from "../models/userModel";
 import { validateRegistration } from "../middleware/validationMiddleware";
 
 const router = express.Router();
@@ -54,10 +58,14 @@ router.post("/registerAction/", validateRegistration, async (req, res) => {
   // Extract data from request body
   const { username, email, password } = req.body;
   try {
-    const user = await getUserByUsername(username);
+    const userWithUsername = await getUserByUsername(username);
+    const userWithEmail = await getUserByEmail(email);
     // User already exists
-    if (user) {
+    if (userWithUsername) {
       return res.send("Username already taken.");
+    }
+    if (userWithEmail) {
+      return res.send("Email already taken.");
     }
 
     const password_hash = await bcrypt.hash(password, 10);
