@@ -18,4 +18,17 @@ router.get("/user", isAuthenticated, async (req, res) => {
   }
 });
 
+router.get("/profile", isAuthenticated, async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.redirect("/login");
+    }
+    const userInfo = await getUserByUsername(req.session.user.username);
+    const posts = await getUserPosts(req.session.user.userId.toString());
+    res.render("profile", { userInfo, user: req.session.user, posts });
+  } catch (error) {
+    res.status(500).send("Error fetching user info");
+  }
+});
+
 export default router;

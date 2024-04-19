@@ -51,10 +51,12 @@ export async function getPostPreviews(lastPostId?: number, limit = 10) {
 export async function getUserPosts(authorID: string) {
   const query = `
   SELECT 
-    BlogPosts.title, 
-    BlogPosts.content, 
+    BlogPosts.title,
     BlogPosts.created_at, 
     BlogPosts.image_path,
+    BlogPosts.is_private,
+    BlogPosts.post_id,
+    BlogPosts.view_count,
     Users.username AS author_name
   FROM 
     BlogPosts 

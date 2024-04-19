@@ -21,4 +21,16 @@ router.get("/user", authMiddleware_1.isAuthenticated, async (req, res) => {
         res.status(500).send("Error fetching posts");
     }
 });
+router.get("profile", authMiddleware_1.isAuthenticated, async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+        const userInfo = await (0, userModel_1.getUserByUsername)(req.session.user.username);
+        res.render("profile", { userInfo, user: req.session.user });
+    }
+    catch (error) {
+        res.status(500).send("Error fetching user info");
+    }
+});
 exports.default = router;

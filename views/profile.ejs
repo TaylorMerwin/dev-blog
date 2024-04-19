@@ -2,15 +2,13 @@
 <html lang="en" datatheme="sunset">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
-  <link rel="stylesheet" href="/styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/styles/style.css" />
   <title>Bloggy</title>
 </head>
 
 <body class="bg-base-300">
-
   <div class="navbar bg-base-100">
     <div class="navbar-start">
       <div class="dropdown">
@@ -26,14 +24,10 @@
             <li><a>Item 3</a></li>
             <% } else { %>
               <li><a href="/user">
-                  <%= user.username %>'s User Page
+                  <%= user.username %>
                 </a></li>
               <li><a href="/logout">Logout</a></li>
-              <li><a href="/profile">
-                  <%= user.username %>'s Profile
-                </a>
-
-              </li>
+              <li><a>Item 3</a></li>
               <% } %>
                 <li><a>About</a></li>
                 <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
@@ -58,43 +52,55 @@
       </ul>
     </div>
     <div class="navbar-end">
-      <a class="btn btn-outline btn-primary" href="/create">Create Post</a>
     </div>
   </div>
 
-  <div class="flex flex-col max-w-lg mt-8 space-y-8 justify-center align-middle mx-auto">
 
-    <% posts.slice().reverse().forEach(function(post) { %>
+  <div class="container overflow-x-auto mx-auto lg:w-1/2">
+    <table class="table table-zebra justify-center">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Creation Date</th>
+          <th>Visibility</th>
+          <th>Views</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
 
-      <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', { month: 'long' ,
-        day: 'numeric' , year: 'numeric' }); %>
+        <% posts.slice().forEach(function(post) { %>
+          <tr class="hover">
+            <td>
+              <%= post.title %>
+            </td>
+            <td>
+              <% let date=new Date(post.created_at); let formattedDate=date.toLocaleDateString('en-US', {
+                month: 'numeric' , day: 'numeric' , year: 'numeric' }); %>
+                <%=formattedDate%>
+            </td>
+            <td>
+              <%if (post.is_private) {%>
+                <%= "Private" %>
+                  <% } else { %>
+                    <%= "Public" %>
+                      <% } %>
+            </td>
+            <td>
+              <%= post.view_count %>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline btn-primary">Edit</button>
+              <button class="btn btn-sm btn-outline btn-secondary">Delete</button>
+            </td>
+          </tr>
+          <% }) %>
 
-        <a class="justify-center" href="/view/<%= post.post_id%>">
-          <div class="card lg:card-side bg-base-100 shadow-xl max-w-lg justify-center align-middle">
-            <% if (post.image_path) { %>
-              <figure class="lg:w-1/2"><img class="w-full lg:max-w-full"
-                  src="https://storage.googleapis.com/bloggy-images/<%= post.image_path%>" alt="Card Image" />
-              </figure>
-              <% } %>
-                <div class="card-body">
-                  <p>
-                    <%= post.author_name %>
-                  </p>
-                  <p>
-                    <%= formattedDate %>
-                  </p>
-                  <h2 class="card-title hover:text-accent">
-                    <%= post.title %>
-                  </h2>
-                  <p>
-                    <%= post.post_description %>
-                  </p>
-                </div>
-          </div>
-        </a>
-        <% }); %>
+      </tbody>
+    </table>
+
 
   </div>
-</body>
 
-</html>
+</body>

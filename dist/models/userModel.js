@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserByUsername = void 0;
+exports.createUser = exports.getUserByEmail = exports.getUserByUsername = void 0;
 const database_1 = require("./database");
 // Returns a user entry from the Users table by username
 async function getUserByUsername(username) {
@@ -13,6 +13,16 @@ async function getUserByUsername(username) {
     return rows[0];
 }
 exports.getUserByUsername = getUserByUsername;
+async function getUserByEmail(email) {
+    const query = `
+  SELECT * 
+  FROM Users
+  WHERE email = $1`;
+    const result = await database_1.pool.query(query, [email]);
+    const rows = result.rows;
+    return rows[0];
+}
+exports.getUserByEmail = getUserByEmail;
 /**
  * Insert a new user into the Users table
  * @param username
