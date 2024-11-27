@@ -1,9 +1,9 @@
---Bloggy Database Schema
-DROP DATABASE IF EXISTS `Bloggy`;
+--dev-blog Database Schema
+DROP DATABASE IF EXISTS `dev-blog`;
 
-CREATE DATABASE IF NOT EXISTS `Bloggy`;
+CREATE DATABASE IF NOT EXISTS `dev-blog`;
 
-USE `Bloggy`;
+USE `dev-blog`;
 
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE Users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE BlogPosts (
+CREATE TABLE dev-blogPosts (
     post_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     post_description VARCHAR(140) DEFAULT NULL,
