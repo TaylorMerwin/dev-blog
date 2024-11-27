@@ -13,7 +13,7 @@
     "tailwind:watch": "postcss public/styles/tailwind.css -o public/styles/style.css --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Taylor Merwin",
   "license": "ISC",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.12",
