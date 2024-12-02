@@ -16,4 +16,14 @@ const pool = new Pool({
   },
 });
 
+export async function testConnection() {
+  try {
+    const client = await pool.connect();
+    console.log("Connected to database successfully");
+    client.release();
+  } catch (err) {
+    console.error("Database connection error:", err);
+  }
+}
+
 export { pool };

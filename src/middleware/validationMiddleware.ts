@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 const usernameRegex = /^[a-zA-Z0-9_-]{3,16}$/;
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]\\|:;"'<>,.?/~`])[A-Za-z\d!@#$%^&*()_\-+={}[\]\\|:;"'<>,.?/~`]{8,}$/;
 
 export const validateUsername = (username: string): string | null => {
   if (!usernameRegex.test(username)) {

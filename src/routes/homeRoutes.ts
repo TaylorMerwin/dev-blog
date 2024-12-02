@@ -1,6 +1,5 @@
-/* Routes for viewing homepage and blog posts */
 import express from "express";
-import { getPost, updateBlogViewCount } from "../models/postModel";
+import { getPost } from "../models/postModel";
 import {
   getCachedPosts,
   isCacheStale,
@@ -27,10 +26,6 @@ router.get("/view/:post_id", async (req, res) => {
     if (!post) {
       return res.status(404).send("Post not found");
     }
-
-    // Increment the view count by 1 for this post
-    await updateBlogViewCount(1, parseInt(id));
-
     res.render("view", { post, user: req.session.user }); // Pass the post to the view.ejs template
   } catch (error) {
     console.error(error);

@@ -5,7 +5,6 @@ import rateLimit from "express-rate-limit";
 import { updateCache } from "./services/cacheService";
 import postRoutes from "./routes/postRoutes";
 import homeRoutes from "./routes/homeRoutes";
-import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 
 declare module "express-session" {
@@ -41,7 +40,6 @@ app.use(
 app.use(limiter);
 app.use(postRoutes);
 app.use(homeRoutes);
-app.use(userRoutes);
 app.use(authRoutes);
 
 app.listen(PORT, () => {
