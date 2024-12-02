@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://use.typekit.net/rko3hnw.css">
   <link rel="stylesheet" href="/styles/style.css">
-  <title>Bloggy</title>
+  <title>Taylor Merwin</title>
 </head>
 
 <body class="bg-base-300">
@@ -39,7 +39,7 @@
                 <li><a href="https://github.com/TaylorMerwin/bloggy" rel="noopener" target="_blank">Source</a></li>
         </ul>
       </div>
-      <a href="/" class="btn btn-ghost text-xl">bloggy</a>
+      <a href="/" class="btn btn-ghost text-xl">Taylor Merwin</a>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
@@ -75,26 +75,35 @@
               <figure class="lg:w-1/2"><img class="w-full lg:max-w-full"
                   src="https://storage.googleapis.com/bloggy-images/<%= post.image_path%>" alt="Card Image" />
               </figure>
-              <% } %>
-                <div class="card-body">
-                  <p>
-                    <%= post.author_name %>
-                  </p>
-                  <p>
-                    <%= formattedDate %>
-                  </p>
-                  <h2 class="card-title hover:text-accent">
-                    <%= post.title %>
-                  </h2>
-                  <p>
-                    <%= post.post_description %>
-                  </p>
-                </div>
+              <% } else {%>
+                <figure class="lg:w-1/2"><img class="w-full lg:max-w-full" src="https://picsum.photos/400"
+                    alt="Card Image" />
+                </figure>
+                <% } %>
+                  <div class="card-body">
+                    <p>
+                      <%= post.author_name %>
+                    </p>
+                    <p>
+                      <%= formattedDate %>
+                    </p>
+                    <h2 class="card-title hover:text-accent">
+                      <%= post.title %>
+                    </h2>
+                    <p>
+                      <%= post.post_description %>
+                    </p>
+                  </div>
           </div>
         </a>
         <% }); %>
 
   </div>
+  <footer class="footer footer-center bg-base-300 text-base-content p-4">
+    <aside>
+      <p>Taylor Merwin 2024 </p>
+    </aside>
+  </footer>
 </body>
 
 </html>
